@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -3546,6 +3546,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4449,8 +4450,12 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!4 &126941188
 Transform:
   m_ObjectHideFlags: 0
@@ -28332,7 +28337,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Settings
+  m_text: "Configura\xE7\xF5es"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
   m_sharedMaterial: {fileID: -1847478308233949354, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
@@ -28911,7 +28916,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Display Name
+  m_text: "Nome de Exibi\xE7\xE3o"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
   m_sharedMaterial: {fileID: -1847478308233949354, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
@@ -28984,7 +28989,7 @@ MonoBehaviour:
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
   preserveNumbers: 0
   farsi: 1
-  originalText: Display Name
+  originalText: "Nome de Exibi\xE7\xE3o"
   fixTags: 1
   forceFix: 0
 --- !u!222 &702776248
@@ -34330,7 +34335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shop
+  m_text: Loja
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
   m_sharedMaterial: {fileID: -1847478308233949354, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
@@ -34403,7 +34408,7 @@ MonoBehaviour:
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
   preserveNumbers: 0
   farsi: 1
-  originalText: Shop
+  originalText: Loja
   fixTags: 1
   forceFix: 0
 --- !u!114 &807636331
@@ -53598,6 +53603,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &1281787956
 GameObject:
   m_ObjectHideFlags: 0
@@ -65470,6 +65476,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

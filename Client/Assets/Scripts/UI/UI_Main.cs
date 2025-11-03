@@ -8,34 +8,23 @@ namespace DevelopersHub.ClashOfWhatecer
 
     public class UI_Main : MonoBehaviour
     {
-        
+
         //[SerializeField] public TextMeshProUGUI logTest = null;
         [SerializeField] public GameObject _elements = null;
         [SerializeField] public TextMeshProUGUI _goldText = null;
         [SerializeField] public TextMeshProUGUI _elixirText = null;
-        [SerializeField] public TextMeshProUGUI _darkText = null;
-        [SerializeField] public TextMeshProUGUI _gemsText = null;
         [SerializeField] public TextMeshProUGUI _usernameText = null;
         [SerializeField] public TextMeshProUGUI _xpText = null;
         [SerializeField] public TextMeshProUGUI _trophiesText = null;
         [SerializeField] public TextMeshProUGUI _levelText = null;
         [SerializeField] public Image _goldBar = null;
         [SerializeField] public Image _elixirBar = null;
-        [SerializeField] public Image _darkBar = null;
-        [SerializeField] public Image _gemsBar = null;
         [SerializeField] public Image _xpBar = null;
         [SerializeField] private Button _shopButton = null;
-        [SerializeField] private Button _battleButton = null;
         [SerializeField] private Button _chatButton = null;
         [SerializeField] private Button _settingsButton = null;
         [SerializeField] private Button _rankingButton = null;
-        [SerializeField] public TextMeshProUGUI _buildersText = null;
-        [SerializeField] public TextMeshProUGUI _shieldText = null;
-        [SerializeField] private Button _addGemsButton = null;
-        [SerializeField] private Button _addShieldButton = null;
         [SerializeField] private Button _buyResourceButton = null;
-        [SerializeField] private Button _battleReportsButton = null;
-        [SerializeField] private GameObject _battleReportsNew = null;
         [SerializeField] public BuildGrid _grid = null;
         [SerializeField] public Building[] _buildingPrefabs = null;
         [SerializeField] public List<BattleUnit> _armyCampsUnit = new List<BattleUnit>();
@@ -48,7 +37,7 @@ namespace DevelopersHub.ClashOfWhatecer
         public UI_Bar barBuild = null;
         private static UI_Main _instance = null; public static UI_Main instanse { get { return _instance; } }
 
-        private bool _active = true;public bool isActive { get { return _active; } }
+        private bool _active = true; public bool isActive { get { return _active; } }
         private int workers = 0;
         private int busyWorkers = 0; public bool haveAvalibaleBuilder { get { return busyWorkers < workers; } }
 
@@ -61,48 +50,27 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void Awake()
         {
-             _instance = this;
+            _instance = this;
             _elements.SetActive(true);
             _goldText.text = "";
             _elixirText.text = "";
-            _darkText.text = "";
-            _gemsText.text = "";
             _usernameText.text = "";
             _xpText.text = "";
             _trophiesText.text = "";
             _levelText.text = "";
             _goldBar.fillAmount = 0;
             _elixirBar.fillAmount = 0;
-            _darkBar.fillAmount = 0;
-            _gemsBar.fillAmount = 0;
             _xpBar.fillAmount = 0;
-            _buildersText.text = "";
-            _shieldText.text = "";
         }
 
         private void Start()
         {
             _shopButton.onClick.AddListener(ShopButtonClicked);
-            _battleButton.onClick.AddListener(BattleButtonClicked);
             _chatButton.onClick.AddListener(ChatButtonClicked);
             _settingsButton.onClick.AddListener(SettingsButtonClicked);
-            _addGemsButton.onClick.AddListener(AddGems);
-            _addShieldButton.onClick.AddListener(AddShield);
             _rankingButton.onClick.AddListener(RankingButtonClicked);
             _buyResourceButton.onClick.AddListener(BuyResource);
-            _battleReportsButton.onClick.AddListener(BattleReportsButtonClicked);
             SoundManager.instanse.PlayMusic(SoundManager.instanse.mainMusic);
-        }
-
-        public void ChangeUnreadBattleReports(int count)
-        {
-            _battleReportsNew.SetActive(count > 0);
-        }
-
-        private void BattleReportsButtonClicked()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_BattleReports.instanse.Open();
         }
 
         private void SettingsButtonClicked()
@@ -127,13 +95,6 @@ namespace DevelopersHub.ClashOfWhatecer
         {
             SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
             UI_Shop.instanse.SetStatus(true);
-            SetStatus(false);
-        }
-
-        private void BattleButtonClicked()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Search.instanse.SetStatus(true);
             SetStatus(false);
         }
 
@@ -192,12 +153,12 @@ namespace DevelopersHub.ClashOfWhatecer
                     Building building = _grid.GetBuilding(Player.instanse.data.buildings[i].databaseID);
                     if (building != null)
                     {
-                        
+
                     }
                     else
                     {
                         building = _grid.GetBuilding(Player.instanse.data.buildings[i].id, Player.instanse.data.buildings[i].x, Player.instanse.data.buildings[i].y);
-                        if(building != null)
+                        if (building != null)
                         {
                             _grid.RemoveUnidentifiedBuilding(building);
                             building.databaseID = Player.instanse.data.buildings[i].databaseID;
@@ -236,7 +197,7 @@ namespace DevelopersHub.ClashOfWhatecer
                     }
 
                     building.data = Player.instanse.data.buildings[i];
-                    if(first)
+                    if (first)
                     {
                         building.lastChange = Player.instanse.lastUpdateSent.AddSeconds(-1);
                     }
@@ -296,34 +257,11 @@ namespace DevelopersHub.ClashOfWhatecer
             }
             workers = _workers;
             busyWorkers = _busyWorkers;
-            _buildersText.text = (_workers - _busyWorkers).ToString() + "/" + _workers.ToString();
         }
 
         private void Update()
         {
-            if (_active)
-            {
-                if(Player.instanse.data.shield > Player.instanse.data.nowTime)
-                {
-                    _shieldText.text = Tools.SecondsToTimeFormat((int)(Player.instanse.data.shield - Player.instanse.data.nowTime).TotalSeconds);
-                }
-                else
-                {
-                    _shieldText.text = "None";
-                }
-            }
-        }
-
-        private void AddShield()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Store.instanse.Open(2);
-        }
-
-        private void AddGems()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Store.instanse.Open(1);
+        
         }
 
         private void BuyResource()

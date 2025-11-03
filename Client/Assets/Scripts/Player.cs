@@ -144,7 +144,6 @@
                             bytesLength = packet.ReadInt();
                             bytes = packet.ReadBytes(bytesLength);
                             _unreadBattleReports = packet.ReadInt();
-                            UI_Main.instanse.ChangeUnreadBattleReports(_unreadBattleReports);
                             initializationData = Data.Desrialize<Data.InitializationData>(Data.Decompress(bytes));
                             bool versionValid = false;
                             bool isThereNewerVersion = true;
@@ -721,10 +720,6 @@
                             bytesLength = packet.ReadInt();
                             bytes = packet.ReadBytes(bytesLength);
                             reports = Data.Desrialize<List<Data.BattleReportItem>>(Data.Decompress(bytes));
-                            if (reports != null && reports.Count > 0)
-                            {
-                                UI_Main.instanse.ChangeUnreadBattleReports(0);
-                            }
                         }
                         UI_BattleReports.instanse.OpenResponse(reports);
                         break;
@@ -886,12 +881,9 @@
         {
             UI_Main.instanse._goldText.text = _gold.ToString();
             UI_Main.instanse._elixirText.text = _elixir.ToString();
-            UI_Main.instanse._darkText.text = _darkElixir.ToString();
-            UI_Main.instanse._gemsText.text = data.gems.ToString();
 
             UI_Main.instanse._goldBar.fillAmount = (_maxGold > 0 ? ((float)_gold / (float)_maxGold) : 0);
             UI_Main.instanse._elixirBar.fillAmount = (_maxElixir > 0 ? ((float)_elixir / (float)_maxElixir) : 0);
-            UI_Main.instanse._darkBar.fillAmount = (_maxDarkElixir > 0 ? ((float)_darkElixir / (float)_maxDarkElixir) : 0);
         }
 
         public void RushSyncRequest()

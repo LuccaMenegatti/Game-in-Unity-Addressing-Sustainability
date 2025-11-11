@@ -830,7 +830,6 @@
             UpdateResourcesUI();
 
             UI_Main.instanse._usernameText.text = Data.DecodeString(data.name);
-            UI_Main.instanse._trophiesText.text = data.trophies.ToString();
             UI_Main.instanse._levelText.text = data.level.ToString();
             UI_Main.instanse._xpText.text = data.xp.ToString();
             
@@ -872,7 +871,6 @@
                 UI_Store.instanse.Sync();
             }
             UI_Main.instanse._usernameText.ForceMeshUpdate(true);
-            UI_Main.instanse._trophiesText.ForceMeshUpdate(true);
             UI_Main.instanse._levelText.ForceMeshUpdate(true);
             UI_Main.instanse._xpText.ForceMeshUpdate(true);
         }

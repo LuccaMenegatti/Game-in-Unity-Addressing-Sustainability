@@ -1,7 +1,5 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using TMPro;
     using UnityEngine.UI;
@@ -15,7 +13,6 @@ namespace DevelopersHub.ClashOfWhatecer
         [SerializeField] public TextMeshProUGUI _elixirText = null;
         [SerializeField] public TextMeshProUGUI _usernameText = null;
         [SerializeField] public TextMeshProUGUI _xpText = null;
-        [SerializeField] public TextMeshProUGUI _trophiesText = null;
         [SerializeField] public TextMeshProUGUI _levelText = null;
         [SerializeField] public Image _goldBar = null;
         [SerializeField] public Image _elixirBar = null;
@@ -24,10 +21,8 @@ namespace DevelopersHub.ClashOfWhatecer
         [SerializeField] private Button _chatButton = null;
         [SerializeField] private Button _settingsButton = null;
         [SerializeField] private Button _rankingButton = null;
-        [SerializeField] private Button _buyResourceButton = null;
         [SerializeField] public BuildGrid _grid = null;
         [SerializeField] public Building[] _buildingPrefabs = null;
-        [SerializeField] public List<BattleUnit> _armyCampsUnit = new List<BattleUnit>();
 
         [Header("Buttons")]
         public Transform buttonsParent = null;
@@ -56,7 +51,6 @@ namespace DevelopersHub.ClashOfWhatecer
             _elixirText.text = "";
             _usernameText.text = "";
             _xpText.text = "";
-            _trophiesText.text = "";
             _levelText.text = "";
             _goldBar.fillAmount = 0;
             _elixirBar.fillAmount = 0;
@@ -69,7 +63,6 @@ namespace DevelopersHub.ClashOfWhatecer
             _chatButton.onClick.AddListener(ChatButtonClicked);
             _settingsButton.onClick.AddListener(SettingsButtonClicked);
             _rankingButton.onClick.AddListener(RankingButtonClicked);
-            _buyResourceButton.onClick.AddListener(BuyResource);
             SoundManager.instanse.PlayMusic(SoundManager.instanse.mainMusic);
         }
 
@@ -258,17 +251,5 @@ namespace DevelopersHub.ClashOfWhatecer
             workers = _workers;
             busyWorkers = _busyWorkers;
         }
-
-        private void Update()
-        {
-        
-        }
-
-        private void BuyResource()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Store.instanse.Open(3);
-        }
-
     }
 }

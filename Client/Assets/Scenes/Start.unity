@@ -5607,51 +5607,50 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Cria\xE7\xE3o de Conta\nAo registrar uma Conta ou utilizar nosso Servi\xE7o
-    de qualquer forma, voc\xEA declara que tem pelo menos 13 anos de idade (ou mais)
-    e que compreende e concorda com estes Termos de Servi\xE7o. Se voc\xEA tiver
-    menos de 18 anos, declara que seus pais ou respons\xE1vel legal revisaram e aceitaram
-    estes Termos de Servi\xE7o. Se voc\xEA acessar nosso Servi\xE7o por meio de uma
-    plataforma de terceiros, como Apple ou Google, e/ou uma rede social como o Facebook,
-    voc\xEA \xE9 obrigado a cumprir os termos de servi\xE7o deles, al\xE9m dos nossos
-    Termos de Servi\xE7o.\n\nAceite dos Termos\nAo utilizar nossos Servi\xE7os, voc\xEA
-    concorda com estes Termos, com nossas Diretrizes de Treinador e com nossa Pol\xEDtica
-    de Privacidade. Se voc\xEA for pai, m\xE3e ou respons\xE1vel legal de uma crian\xE7a
-    menor de 13 anos (o \"Respons\xE1vel\"), voc\xEA concorda com estes Termos em
-    seu nome e no de seus filhos que estejam autorizados a usar os Servi\xE7os de
-    acordo com estes Termos e com nossa Pol\xEDtica de Privacidade.\nAo registrar
-    uma conta ou atualizar suas informa\xE7\xF5es, voc\xEA concorda em fornecer dados
-    corretos e em mant\xEA-los sempre atualizados. Voc\xEA nunca poder\xE1 permitir
-    que outra pessoa use sua conta (exceto seus pais ou respons\xE1vel legal). Se
-    acreditar que sua conta n\xE3o \xE9 mais segura, deve nos notificar imediatamente.
-    Se algu\xE9m solicitar sua senha ou dados pessoais (como nome, endere\xE7o ou
-    telefone), utilize a fun\xE7\xE3o \"Denunciar Abuso\" para relatar a situa\xE7\xE3o
-    imediatamente. Voc\xEA concorda que poderemos verificar a veracidade das informa\xE7\xF5es
-    fornecidas, inclusive os dados de contato de um respons\xE1vel.\n\nEfeito do
-    Encerramento da Conta\nPodemos cancelar, suspender ou encerrar sua Conta e o
-    acesso a Itens de Troca, Conte\xFAdos ou Servi\xE7os a nosso crit\xE9rio, sem
-    aviso pr\xE9vio, inclusive se:\n(a) sua Conta permanecer inativa por um ano;\n(b)
-    voc\xEA descumprir estes Termos;\n(c) suspeitarmos de fraude ou uso indevido;\n(d)
-    houver suspeita de atividade ilegal associada \xE0 sua Conta; ou\n(e) para proteger
-    nossos servi\xE7os, sistemas, aplicativo, usu\xE1rios ou reputa\xE7\xE3o.\nN\xE3o
-    temos obriga\xE7\xE3o de reembolsar ou compensar perdas de itens ou conte\xFAdos
-    em caso de encerramento da Conta.\n\nJogo Seguro\nDurante o jogo, esteja atento
-    ao ambiente ao seu redor e jogue com seguran\xE7a. Voc\xEA concorda que joga
-    por sua pr\xF3pria conta e risco, sendo sua responsabilidade manter seguros e
-    seguros de sa\xFAde adequados para qualquer eventualidade. Voc\xEA concorda em
-    n\xE3o usar o aplicativo para infringir leis, regulamentos ou as Diretrizes de
-    Treinador, nem incentivar terceiros a faz\xEA-lo. Concorda ainda em n\xE3o causar
-    sofrimento emocional a outros, n\xE3o humilhar, amea\xE7ar ou agredir pessoas,
-    n\xE3o invadir propriedades privadas sem permiss\xE3o, n\xE3o se passar por outra
-    pessoa nem deturpar sua identidade, e n\xE3o praticar atividades que possam causar
-    ferimentos, morte ou danos de qualquer tipo.\nNa medida permitida por lei, n\xE3o
-    nos responsabilizamos por danos a propriedades, les\xF5es ou mortes decorrentes
-    do uso dos Servi\xE7os. Em caso de disputa entre usu\xE1rios, voc\xEA nos isenta
-    de todas as reivindica\xE7\xF5es e danos relacionados.\n\nLinks para Sites ou
-    Recursos de Terceiros\n\nOs Servi\xE7os e o aplicativo podem conter links para
-    sites ou recursos de terceiros. Esses links s\xE3o fornecidos apenas por conveni\xEAncia
-    e n\xE3o nos responsabilizamos pelo conte\xFAdo, produtos ou servi\xE7os disponibilizados
-    por esses sites. Voc\xEA assume total responsabilidade e risco ao utilizar qualquer
-    site ou recurso de terceiros."
+    de qualquer forma, voc\xEA declara que compreende e concorda com estes Termos
+    de Servi\xE7o. Se voc\xEA tiver menos de 18 anos, declara que seus pais ou respons\xE1vel
+    legal revisaram e aceitaram estes Termos de Servi\xE7o. Se voc\xEA acessar nosso
+    Servi\xE7o por meio de uma plataforma de terceiros, como Apple ou Google, e/ou
+    uma rede social como o Facebook, voc\xEA \xE9 obrigado a cumprir os termos de
+    servi\xE7o deles, al\xE9m dos nossos Termos de Servi\xE7o.\n\nAceite dos Termos\nAo
+    utilizar nossos Servi\xE7os, voc\xEA concorda com estes Termos, com nossas Diretrizes
+    de Treinador e com nossa Pol\xEDtica de Privacidade. Se voc\xEA for pai, m\xE3e
+    ou respons\xE1vel legal de uma crian\xE7a menor de 13 anos (o \"Respons\xE1vel\"),
+    voc\xEA concorda com estes Termos em seu nome e no de seus filhos que estejam
+    autorizados a usar os Servi\xE7os de acordo com estes Termos e com nossa Pol\xEDtica
+    de Privacidade.\nAo registrar uma conta ou atualizar suas informa\xE7\xF5es,
+    voc\xEA concorda em fornecer dados corretos e em mant\xEA-los sempre atualizados.
+    Voc\xEA nunca poder\xE1 permitir que outra pessoa use sua conta (exceto seus
+    pais ou respons\xE1vel legal). Se acreditar que sua conta n\xE3o \xE9 mais segura,
+    deve nos notificar imediatamente. Se algu\xE9m solicitar sua senha ou dados pessoais
+    (como nome, endere\xE7o ou telefone), utilize a fun\xE7\xE3o \"Denunciar Abuso\"
+    para relatar a situa\xE7\xE3o imediatamente. Voc\xEA concorda que poderemos verificar
+    a veracidade das informa\xE7\xF5es fornecidas, inclusive os dados de contato
+    de um respons\xE1vel.\n\nEfeito do Encerramento da Conta\nPodemos cancelar, suspender
+    ou encerrar sua Conta e o acesso a Itens de Troca, Conte\xFAdos ou Servi\xE7os
+    a nosso crit\xE9rio, sem aviso pr\xE9vio, inclusive se:\n(a) sua Conta permanecer
+    inativa por um ano;\n(b) voc\xEA descumprir estes Termos;\n(c) suspeitarmos de
+    fraude ou uso indevido;\n(d) houver suspeita de atividade ilegal associada \xE0
+    sua Conta; ou\n(e) para proteger nossos servi\xE7os, sistemas, aplicativo, usu\xE1rios
+    ou reputa\xE7\xE3o.\nN\xE3o temos obriga\xE7\xE3o de reembolsar ou compensar
+    perdas de itens ou conte\xFAdos em caso de encerramento da Conta.\n\nJogo Seguro\nDurante
+    o jogo, esteja atento ao ambiente ao seu redor e jogue com seguran\xE7a. Voc\xEA
+    concorda que joga por sua pr\xF3pria conta e risco, sendo sua responsabilidade
+    manter seguros e seguros de sa\xFAde adequados para qualquer eventualidade. Voc\xEA
+    concorda em n\xE3o usar o aplicativo para infringir leis, regulamentos ou as
+    Diretrizes de Treinador, nem incentivar terceiros a faz\xEA-lo. Concorda ainda
+    em n\xE3o causar sofrimento emocional a outros, n\xE3o humilhar, amea\xE7ar ou
+    agredir pessoas, n\xE3o invadir propriedades privadas sem permiss\xE3o, n\xE3o
+    se passar por outra pessoa nem deturpar sua identidade, e n\xE3o praticar atividades
+    que possam causar ferimentos, morte ou danos de qualquer tipo.\nNa medida permitida
+    por lei, n\xE3o nos responsabilizamos por danos a propriedades, les\xF5es ou
+    mortes decorrentes do uso dos Servi\xE7os. Em caso de disputa entre usu\xE1rios,
+    voc\xEA nos isenta de todas as reivindica\xE7\xF5es e danos relacionados.\n\nLinks
+    para Sites ou Recursos de Terceiros\n\nOs Servi\xE7os e o aplicativo podem conter
+    links para sites ou recursos de terceiros. Esses links s\xE3o fornecidos apenas
+    por conveni\xEAncia e n\xE3o nos responsabilizamos pelo conte\xFAdo, produtos
+    ou servi\xE7os disponibilizados por esses sites. Voc\xEA assume total responsabilidade
+    e risco ao utilizar qualquer site ou recurso de terceiros."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
   m_sharedMaterial: {fileID: -1847478308233949354, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
@@ -5725,51 +5724,51 @@ MonoBehaviour:
   preserveNumbers: 0
   farsi: 1
   originalText: "Cria\xE7\xE3o de Conta\nAo registrar uma Conta ou utilizar nosso
-    Servi\xE7o de qualquer forma, voc\xEA declara que tem pelo menos 13 anos de idade
-    (ou mais) e que compreende e concorda com estes Termos de Servi\xE7o. Se voc\xEA
-    tiver menos de 18 anos, declara que seus pais ou respons\xE1vel legal revisaram
-    e aceitaram estes Termos de Servi\xE7o. Se voc\xEA acessar nosso Servi\xE7o por
-    meio de uma plataforma de terceiros, como Apple ou Google, e/ou uma rede social
-    como o Facebook, voc\xEA \xE9 obrigado a cumprir os termos de servi\xE7o deles,
-    al\xE9m dos nossos Termos de Servi\xE7o.\n\nAceite dos Termos\nAo utilizar nossos
-    Servi\xE7os, voc\xEA concorda com estes Termos, com nossas Diretrizes de Treinador
-    e com nossa Pol\xEDtica de Privacidade. Se voc\xEA for pai, m\xE3e ou respons\xE1vel
-    legal de uma crian\xE7a menor de 13 anos (o \"Respons\xE1vel\"), voc\xEA concorda
-    com estes Termos em seu nome e no de seus filhos que estejam autorizados a usar
-    os Servi\xE7os de acordo com estes Termos e com nossa Pol\xEDtica de Privacidade.\nAo
-    registrar uma conta ou atualizar suas informa\xE7\xF5es, voc\xEA concorda em
-    fornecer dados corretos e em mant\xEA-los sempre atualizados. Voc\xEA nunca poder\xE1
-    permitir que outra pessoa use sua conta (exceto seus pais ou respons\xE1vel legal).
-    Se acreditar que sua conta n\xE3o \xE9 mais segura, deve nos notificar imediatamente.
-    Se algu\xE9m solicitar sua senha ou dados pessoais (como nome, endere\xE7o ou
-    telefone), utilize a fun\xE7\xE3o \"Denunciar Abuso\" para relatar a situa\xE7\xE3o
-    imediatamente. Voc\xEA concorda que poderemos verificar a veracidade das informa\xE7\xF5es
-    fornecidas, inclusive os dados de contato de um respons\xE1vel.\n\nEfeito do
-    Encerramento da Conta\nPodemos cancelar, suspender ou encerrar sua Conta e o
-    acesso a Itens de Troca, Conte\xFAdos ou Servi\xE7os a nosso crit\xE9rio, sem
-    aviso pr\xE9vio, inclusive se:\n(a) sua Conta permanecer inativa por um ano;\n(b)
-    voc\xEA descumprir estes Termos;\n(c) suspeitarmos de fraude ou uso indevido;\n(d)
-    houver suspeita de atividade ilegal associada \xE0 sua Conta; ou\n(e) para proteger
-    nossos servi\xE7os, sistemas, aplicativo, usu\xE1rios ou reputa\xE7\xE3o.\nN\xE3o
-    temos obriga\xE7\xE3o de reembolsar ou compensar perdas de itens ou conte\xFAdos
-    em caso de encerramento da Conta.\n\nJogo Seguro\nDurante o jogo, esteja atento
-    ao ambiente ao seu redor e jogue com seguran\xE7a. Voc\xEA concorda que joga
-    por sua pr\xF3pria conta e risco, sendo sua responsabilidade manter seguros e
-    seguros de sa\xFAde adequados para qualquer eventualidade. Voc\xEA concorda em
-    n\xE3o usar o aplicativo para infringir leis, regulamentos ou as Diretrizes de
-    Treinador, nem incentivar terceiros a faz\xEA-lo. Concorda ainda em n\xE3o causar
-    sofrimento emocional a outros, n\xE3o humilhar, amea\xE7ar ou agredir pessoas,
-    n\xE3o invadir propriedades privadas sem permiss\xE3o, n\xE3o se passar por outra
-    pessoa nem deturpar sua identidade, e n\xE3o praticar atividades que possam causar
-    ferimentos, morte ou danos de qualquer tipo.\nNa medida permitida por lei, n\xE3o
-    nos responsabilizamos por danos a propriedades, les\xF5es ou mortes decorrentes
-    do uso dos Servi\xE7os. Em caso de disputa entre usu\xE1rios, voc\xEA nos isenta
-    de todas as reivindica\xE7\xF5es e danos relacionados.\n\nLinks para Sites ou
-    Recursos de Terceiros\n\nOs Servi\xE7os e o aplicativo podem conter links para
-    sites ou recursos de terceiros. Esses links s\xE3o fornecidos apenas por conveni\xEAncia
-    e n\xE3o nos responsabilizamos pelo conte\xFAdo, produtos ou servi\xE7os disponibilizados
-    por esses sites. Voc\xEA assume total responsabilidade e risco ao utilizar qualquer
-    site ou recurso de terceiros."
+    Servi\xE7o de qualquer forma, voc\xEA declara que compreende e concorda com estes
+    Termos de Servi\xE7o. Se voc\xEA tiver menos de 18 anos, declara que seus pais
+    ou respons\xE1vel legal revisaram e aceitaram estes Termos de Servi\xE7o. Se
+    voc\xEA acessar nosso Servi\xE7o por meio de uma plataforma de terceiros, como
+    Apple ou Google, e/ou uma rede social como o Facebook, voc\xEA \xE9 obrigado
+    a cumprir os termos de servi\xE7o deles, al\xE9m dos nossos Termos de Servi\xE7o.\n\nAceite
+    dos Termos\nAo utilizar nossos Servi\xE7os, voc\xEA concorda com estes Termos,
+    com nossas Diretrizes de Treinador e com nossa Pol\xEDtica de Privacidade. Se
+    voc\xEA for pai, m\xE3e ou respons\xE1vel legal de uma crian\xE7a menor de 13
+    anos (o \"Respons\xE1vel\"), voc\xEA concorda com estes Termos em seu nome e
+    no de seus filhos que estejam autorizados a usar os Servi\xE7os de acordo com
+    estes Termos e com nossa Pol\xEDtica de Privacidade.\nAo registrar uma conta
+    ou atualizar suas informa\xE7\xF5es, voc\xEA concorda em fornecer dados corretos
+    e em mant\xEA-los sempre atualizados. Voc\xEA nunca poder\xE1 permitir que outra
+    pessoa use sua conta (exceto seus pais ou respons\xE1vel legal). Se acreditar
+    que sua conta n\xE3o \xE9 mais segura, deve nos notificar imediatamente. Se algu\xE9m
+    solicitar sua senha ou dados pessoais (como nome, endere\xE7o ou telefone), utilize
+    a fun\xE7\xE3o \"Denunciar Abuso\" para relatar a situa\xE7\xE3o imediatamente.
+    Voc\xEA concorda que poderemos verificar a veracidade das informa\xE7\xF5es fornecidas,
+    inclusive os dados de contato de um respons\xE1vel.\n\nEfeito do Encerramento
+    da Conta\nPodemos cancelar, suspender ou encerrar sua Conta e o acesso a Itens
+    de Troca, Conte\xFAdos ou Servi\xE7os a nosso crit\xE9rio, sem aviso pr\xE9vio,
+    inclusive se:\n(a) sua Conta permanecer inativa por um ano;\n(b) voc\xEA descumprir
+    estes Termos;\n(c) suspeitarmos de fraude ou uso indevido;\n(d) houver suspeita
+    de atividade ilegal associada \xE0 sua Conta; ou\n(e) para proteger nossos servi\xE7os,
+    sistemas, aplicativo, usu\xE1rios ou reputa\xE7\xE3o.\nN\xE3o temos obriga\xE7\xE3o
+    de reembolsar ou compensar perdas de itens ou conte\xFAdos em caso de encerramento
+    da Conta.\n\nJogo Seguro\nDurante o jogo, esteja atento ao ambiente ao seu redor
+    e jogue com seguran\xE7a. Voc\xEA concorda que joga por sua pr\xF3pria conta
+    e risco, sendo sua responsabilidade manter seguros e seguros de sa\xFAde adequados
+    para qualquer eventualidade. Voc\xEA concorda em n\xE3o usar o aplicativo para
+    infringir leis, regulamentos ou as Diretrizes de Treinador, nem incentivar terceiros
+    a faz\xEA-lo. Concorda ainda em n\xE3o causar sofrimento emocional a outros,
+    n\xE3o humilhar, amea\xE7ar ou agredir pessoas, n\xE3o invadir propriedades privadas
+    sem permiss\xE3o, n\xE3o se passar por outra pessoa nem deturpar sua identidade,
+    e n\xE3o praticar atividades que possam causar ferimentos, morte ou danos de
+    qualquer tipo.\nNa medida permitida por lei, n\xE3o nos responsabilizamos por
+    danos a propriedades, les\xF5es ou mortes decorrentes do uso dos Servi\xE7os.
+    Em caso de disputa entre usu\xE1rios, voc\xEA nos isenta de todas as reivindica\xE7\xF5es
+    e danos relacionados.\n\nLinks para Sites ou Recursos de Terceiros\n\nOs Servi\xE7os
+    e o aplicativo podem conter links para sites ou recursos de terceiros. Esses
+    links s\xE3o fornecidos apenas por conveni\xEAncia e n\xE3o nos responsabilizamos
+    pelo conte\xFAdo, produtos ou servi\xE7os disponibilizados por esses sites. Voc\xEA
+    assume total responsabilidade e risco ao utilizar qualquer site ou recurso de
+    terceiros."
   fixTags: 1
   forceFix: 0
 --- !u!222 &2006714422

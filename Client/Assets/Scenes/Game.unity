@@ -21919,15 +21919,15 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 514c73a8f1309b34489fb6a722cdeb9a, type: 3}
     - target: {fileID: 8187064391312095956, guid: ff83fa5e49e76504e8f2942e3ca54222, type: 3}
       propertyPath: minutes
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8187064391312095956, guid: ff83fa5e49e76504e8f2942e3ca54222, type: 3}
       propertyPath: seconds
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8187064391312095956, guid: ff83fa5e49e76504e8f2942e3ca54222, type: 3}
       propertyPath: timeRemaining
-      value: 7
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 8187064391312095956, guid: ff83fa5e49e76504e8f2942e3ca54222, type: 3}
       propertyPath: minutesDisplay

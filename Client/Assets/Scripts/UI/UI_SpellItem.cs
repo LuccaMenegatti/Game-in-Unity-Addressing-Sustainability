@@ -28,14 +28,12 @@ namespace DevelopersHub.ClashOfWhatecer
         private void Start()
         {
             _button.onClick.AddListener(Clicked);
-            _buttonInfo.onClick.AddListener(Info);
         }
 
         public void Initialize(Data.ServerSpell spell)
         {
             _housingUnit = spell.housing;
             _housingText.text = spell.housing.ToString();
-            _titleText.text = Language.instanse.GetSpellName(_id);
             if (Language.instanse.IsRTL && _titleText.horizontalAlignment == HorizontalAlignmentOptions.Left)
             {
                 _titleText.horizontalAlignment = HorizontalAlignmentOptions.Right;
@@ -119,12 +117,5 @@ namespace DevelopersHub.ClashOfWhatecer
             haveCount = count;
             _housing = _housingUnit * count;
         }
-
-        private void Info()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Info.instanse.OpenSpellInfo(_id);
-        }
-
     }
 }

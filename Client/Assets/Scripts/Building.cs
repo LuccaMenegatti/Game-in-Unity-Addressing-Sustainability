@@ -109,7 +109,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public static Vector2Int GetBuildingPosition(Data.Building building, int layout = 0)
         {
-            if (layout == 0) { layout = UI_WarLayout.instanse.isActive ? 2 : 1; }
+            if (layout == 0) { layout = 1; }
             if (layout == 2)
             {
                 return new Vector2Int(building.warX, building.warY);
@@ -636,7 +636,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public void BuildForFirstTimeStarted()
         {
-            if(_constructionEffects != null && UI_WarLayout.instanse != null && data.buildTime > 0)
+            if(_constructionEffects != null && data.buildTime > 0)
             {
                 _constructionEffects.SetActive(true);
             }
@@ -774,8 +774,7 @@ namespace DevelopersHub.ClashOfWhatecer
                 packet.Write((int)Player.RequestsID.REPLACE);
                 packet.Write(selectedInstanse.databaseID);
                 packet.Write(selectedInstanse.currentX);
-                packet.Write(selectedInstanse.currentY);
-                packet.Write(UI_WarLayout.instanse.isActive ? 2 : 1);
+                packet.Write(selectedInstanse.currentY);               
                 Sender.TCP_Send(packet);
                 if (_baseArea)
                 {

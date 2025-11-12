@@ -63,12 +63,7 @@
                 _panelScout.SetActive(true);
                 _panelReport.SetActive(false);
                 PlaceBuildings();
-            }
-            if (UI_Clan.instanse.isActive)
-            {
-                _backPanel = Player.Panel.clan;
-                UI_Clan.instanse.Close();
-            }
+            }            
             else
             {
                 _backPanel = Player.Panel.main;
@@ -158,17 +153,13 @@
         {
             _active = false;
             isStarted = false;
-            Time.timeScale = 1f;
-            ClearSpells();
-            ClearBuildingsOnGrid();
+            Time.timeScale = 1f;       
             ClearUnitsOnGrid();
-            ClearUnits();
             UI_Main.instanse._grid.Clear();
             Player.instanse.SyncData(Player.instanse.data);
             if (_backPanel == Player.Panel.clan)
             {
-                UI_Main.instanse.SetStatus(true);
-                UI_Clan.instanse.Open();
+                UI_Main.instanse.SetStatus(true);              
             }
             else
             {
@@ -181,18 +172,13 @@
         private Battle battle = null;
         private bool isStarted = false;
         private DateTime baseTime;
-        private DateTime pauseTime;
-        private List<UI_BattleUnit> units = new List<UI_BattleUnit>();
-        private List<UI_BattleSpell> spells = new List<UI_BattleSpell>();
+        private DateTime pauseTime;       
         private List<BattleUnit> unitsOnGrid = new List<BattleUnit>();
-        private List<UI_Battle.BuildingOnGrid> buildingsOnGrid = new List<UI_Battle.BuildingOnGrid>();
         private List<Battle.Building> battleBuildings = new List<Battle.Building>();
 
         public bool Display()
         {
             _playerNameText.text = Data.DecodeString(_player.name);
-            ClearSpells();
-            ClearUnits();
             _damagePanel.SetActive(false);
             _star1.SetActive(false);
             _star2.SetActive(false);
@@ -228,7 +214,6 @@
             }
             */
             battleBuildings.Clear();
-            spellEffects.Clear();
 
             for (int i = 0; i < _report.buildings.Count; i++)
             {
@@ -271,45 +256,10 @@
 
             _timerText.text = TimeSpan.FromSeconds(Data.battleDuration).ToString(@"mm\:ss");
 
-            ClearBuildingsOnGrid();
             ClearUnitsOnGrid();
 
-            UI_Main.instanse._grid.Clear();
-            for (int i = 0; i < battleBuildings.Count; i++)
-            {
-                var prefab = UI_Main.instanse.GetBuildingPrefab(battleBuildings[i].building.id);
-                if (prefab.Item1 != null)
-                {
-                    UI_Battle.BuildingOnGrid building = new UI_Battle.BuildingOnGrid();
-                    building.building = Instantiate(prefab.Item1, Vector3.zero, Quaternion.identity);
-                    building.building.scout = true;
-                    building.building.rows = prefab.Item2.rows;
-                    building.building.columns = prefab.Item2.columns;
-                    building.building.databaseID = battleBuildings[i].building.databaseID;
-                    building.building.PlacedOnGrid(battleBuildings[i].building.x, battleBuildings[i].building.y, true);
-                    if (building.building._baseArea)
-                    {
-                        building.building._baseArea.gameObject.SetActive(false);
-                    }
-                    building.building.healthBar = Instantiate(UI_Battle.instanse.healthBarPrefab, healthBarGrid);
-                    building.building.healthBar.bar.fillAmount = 1;
-                    building.building.healthBar.gameObject.SetActive(false);
-
-                    building.building.data = battleBuildings[i].building;
-                    building.id = battleBuildings[i].building.databaseID;
-                    building.index = i;
-                    buildingsOnGrid.Add(building);
-                    UI_Main.instanse._grid.buildings.Add(building.building);
-                }
-                battleBuildings[i].building.x += Data.battleGridOffset;
-                battleBuildings[i].building.y += Data.battleGridOffset;
-            }
-
-            for (int i = 0; i < buildingsOnGrid.Count; i++)
-            {
-                buildingsOnGrid[i].building.AdjustUI(true);
-            }
-
+            UI_Main.instanse._grid.Clear();           
+          
             if (_type == Data.BattleType.normal)
             {
                 int townHallLevel = 1;
@@ -324,8 +274,7 @@
 
             baseTime = DateTime.Now;
             battle = new Battle();
-            battle.Initialize(battleBuildings, DateTime.Now, BuildingAttackCallBack, BuildingDestroyedCallBack, BuildingDamageCallBack, StarGained);
-
+            
             _percentageText.text = Mathf.RoundToInt((float)(battle.percentage * 100f)).ToString() + "%";
             //UpdateLoots();
 
@@ -355,42 +304,40 @@
                     {
                         for (int i = 0; i < _report.frames.Count; i++)
                         {
-                            if(_report.frames[i].frame == battle.frameCount + 1)
+                            if (_report.frames[i].frame == battle.frameCount + 1)
                             {
                                 for (int u = 0; u < _report.frames[i].units.Count; u++)
                                 {
-                                    battle.AddUnit(_report.frames[i].units[u].unit, _report.frames[i].units[u].x, _report.frames[i].units[u].y, UnitSpawnCallBack, UnitAttackCallBack, UnitDiedCallBack, UnitDamageCallBack, UnitHealCallBack);
+                                    battle.AddUnit(_report.frames[i].units[u].unit, _report.frames[i].units[u].x, _report.frames[i].units[u].y);
+                                    for (int s = 0; s < _report.frames[i].spells.Count; s++)
+                                    {
+                                        battle.AddSpell(_report.frames[i].spells[s].spell, _report.frames[i].spells[s].x, _report.frames[i].spells[s].y);
+                                    }
+                                    break;
                                 }
-                                for (int s = 0; s < _report.frames[i].spells.Count; s++)
-                                {
-                                    battle.AddSpell(_report.frames[i].spells[s].spell, _report.frames[i].spells[s].x, _report.frames[i].spells[s].y, SpellSpawnCallBack, SpellPalseCallBack, SpellEndCallBack);
-                                }
-                                break;
                             }
+                            battle.ExecuteFrame();
                         }
-                        battle.ExecuteFrame();
                     }
-                }
-                else
-                {
-                    _playButton.gameObject.SetActive(false);
-                    _pauseButton.gameObject.SetActive(false);
-                    _replayButton.gameObject.SetActive(true);
-                    isStarted = false;
-                    Transform[] bars = healthBarGrid.GetComponentsInChildren<Transform>();
-                    if(bars != null)
+                    else
                     {
-                        for (int i = 0; i < bars.Length; i++)
+                        _playButton.gameObject.SetActive(false);
+                        _pauseButton.gameObject.SetActive(false);
+                        _replayButton.gameObject.SetActive(true);
+                        isStarted = false;
+                        Transform[] bars = healthBarGrid.GetComponentsInChildren<Transform>();
+                        if (bars != null)
                         {
-                            if (bars[i] != healthBarGrid.transform)
+                            for (int i = 0; i < bars.Length; i++)
                             {
-                                Destroy(bars[i].gameObject);
+                                if (bars[i] != healthBarGrid.transform)
+                                {
+                                    Destroy(bars[i].gameObject);
+                                }
                             }
                         }
                     }
                 }
-                UpdateUnits();
-                UpdateBuildings();
             }
         }
 
@@ -405,302 +352,5 @@
             }
             unitsOnGrid.Clear();
         }
-
-        public void ClearBuildingsOnGrid()
-        {
-            for (int i = 0; i < buildingsOnGrid.Count; i++)
-            {
-                if (buildingsOnGrid[i].building != null)
-                {
-                    Destroy(buildingsOnGrid[i].building.gameObject);
-                }
-            }
-            buildingsOnGrid.Clear();
-        }
-
-        private void ClearUnits()
-        {
-            for (int i = 0; i < units.Count; i++)
-            {
-                if (units[i])
-                {
-                    Destroy(units[i].gameObject);
-                }
-            }
-            units.Clear();
-        }
-
-        private void ClearSpells()
-        {
-            for (int i = 0; i < spells.Count; i++)
-            {
-                if (spells[i])
-                {
-                    Destroy(spells[i].gameObject);
-                }
-            }
-            spells.Clear();
-        }
-
-        #region Events
-        private void UpdateUnits()
-        {
-            for (int i = 0; i < unitsOnGrid.Count; i++)
-            {
-                if (battle._units[unitsOnGrid[i].index].health > 0)
-                {
-                    unitsOnGrid[i].moving = battle._units[unitsOnGrid[i].index].moving;
-                    unitsOnGrid[i].positionTarget = UI_Battle.BattlePositionToWorldPosotion(battle._units[unitsOnGrid[i].index].positionOnGrid);
-                    if (battle._units[unitsOnGrid[i].index].health < battle._units[unitsOnGrid[i].index].unit.health)
-                    {
-                        unitsOnGrid[i].healthBar.gameObject.SetActive(true);
-                        unitsOnGrid[i].healthBar.bar.fillAmount = battle._units[unitsOnGrid[i].index].health / battle._units[unitsOnGrid[i].index].unit.health;
-                        unitsOnGrid[i].healthBar.rect.anchoredPosition = GetUnitBarPosition(unitsOnGrid[i].transform.position);
-                    }
-                    else
-                    {
-                        unitsOnGrid[i].healthBar.gameObject.SetActive(false);
-                    }
-                }
-            }
-        }
-
-        private void UpdateBuildings()
-        {
-            for (int i = 0; i < buildingsOnGrid.Count; i++)
-            {
-                if (battle._buildings[buildingsOnGrid[i].index].health > 0)
-                {
-                    if (battle._buildings[buildingsOnGrid[i].index].health < battle._buildings[buildingsOnGrid[i].index].building.health)
-                    {
-                        buildingsOnGrid[i].building.healthBar.gameObject.SetActive(true);
-                        buildingsOnGrid[i].building.healthBar.bar.fillAmount = battle._buildings[buildingsOnGrid[i].index].health / battle._buildings[buildingsOnGrid[i].index].building.health;
-                        buildingsOnGrid[i].building.healthBar.rect.anchoredPosition = GetUnitBarPosition(UI_Main.instanse._grid.GetEndPosition(buildingsOnGrid[i].building));
-                    }
-                }
-            }
-        }
-
-        private Vector2 GetUnitBarPosition(Vector3 position)
-        {
-            Vector3 planDownLeft = CameraController.instanse.planDownLeft;
-            Vector3 planTopRight = CameraController.instanse.planTopRight;
-
-            float w = planTopRight.x - planDownLeft.x;
-            float h = planTopRight.y - planDownLeft.y;
-
-            float endW = position.x - planDownLeft.x;
-            float endH = position.y - planDownLeft.y;
-
-            return new Vector2(endW / w * Screen.width, endH / h * Screen.height);
-        }
-
-        private List<UI_SpellEffect> spellEffects = new List<UI_SpellEffect>();
-
-        public void SpellSpawnCallBack(long databaseID, Data.SpellID id, Battle.BattleVector2 target, float radius)
-        {
-            Vector3 position = new Vector3(target.x, 0, target.y);
-            position = UI_Main.instanse._grid.transform.TransformPoint(position);
-            UI_SpellEffect effect = Instantiate(UI_Battle.instanse.spellEffectPrefab, position, Quaternion.identity);
-            effect.Initialize(id, databaseID, radius);
-            spellEffects.Add(effect);
-        }
-
-        public void SpellPalseCallBack(long id)
-        {
-            for (int i = 0; i < spellEffects.Count; i++)
-            {
-                if (spellEffects[i].DatabaseID == battle._spells[i].spell.databaseID)
-                {
-                    spellEffects[i].Pulse();
-                    break;
-                }
-            }
-        }
-
-        public void SpellEndCallBack(long id)
-        {
-            for (int i = 0; i < spellEffects.Count; i++)
-            {
-                if (spellEffects[i].DatabaseID == id)
-                {
-                    spellEffects[i].End();
-                    spellEffects.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
-        public void UnitSpawnCallBack(long id)
-        {
-            int u = -1;
-            for (int i = 0; i < battle._units.Count; i++)
-            {
-                if (battle._units[i].unit.databaseID == id)
-                {
-                    u = i;
-                    break;
-                }
-            }
-            if (u >= 0)
-            {
-                BattleUnit prefab = UI_Battle.instanse.GetUnitPrefab(battle._units[u].unit.id);
-                if (prefab)
-                {
-                    BattleUnit unit = Instantiate(prefab, UI_Main.instanse._grid.transform);
-                    unit.transform.localPosition = UI_Battle.BattlePositionToWorldPosotion(battle._units[u].positionOnGrid);
-                    //unit.transform.rotation = Quaternion.LookRotation(new Vector3(0, unit.transform.position.y, 0) - unit.transform.position);
-                    unit.transform.localEulerAngles = Vector3.zero;
-                    unit.positionTarget = unit.transform.localPosition;
-                    unit.Initialize(u, battle._units[u].unit.databaseID, battle._units[u].unit);
-                    unit.healthBar = Instantiate(UI_Battle.instanse.healthBarPrefab, healthBarGrid);
-                    unit.healthBar.bar.fillAmount = 1;
-                    unit.healthBar.gameObject.SetActive(false);
-                    unitsOnGrid.Add(unit);
-                }
-            }
-        }
-
-        public void StarGained()
-        {
-            if (battle.stars == 1)
-            {
-                _star1.SetActive(true);
-            }
-            else if (battle.stars == 2)
-            {
-                _star2.SetActive(true);
-            }
-            else if (battle.stars == 3)
-            {
-                _star3.SetActive(true);
-            }
-        }
-
-        public void UnitAttackCallBack(long id, long target)
-        {
-            int u = -1;
-            int b = -1;
-            for (int i = 0; i < unitsOnGrid.Count; i++)
-            {
-                if (unitsOnGrid[i].databaseID == id)
-                {
-                    u = i;
-                    break;
-                }
-            }
-            if (u >= 0)
-            {
-                for (int i = 0; i < buildingsOnGrid.Count; i++)
-                {
-                    if (buildingsOnGrid[i].building.databaseID == target)
-                    {
-                        b = i;
-                        break;
-                    }
-                }
-                if (b >= 0)
-                {
-                    if (unitsOnGrid[u].projectilePrefab && unitsOnGrid[u].shootPoint && unitsOnGrid[u].data.attackRange > 0f && unitsOnGrid[u].data.rangedSpeed > 0f)
-                    {
-                        UI_Projectile projectile = Instantiate(unitsOnGrid[u].projectilePrefab);
-                        projectile.Initialize(unitsOnGrid[u].shootPoint.position, buildingsOnGrid[b].building.shootTarget, unitsOnGrid[u].data.rangedSpeed * Data.gridCellSize);
-                    }
-                    unitsOnGrid[u].Attack(buildingsOnGrid[b].building.transform.position);
-                }
-                else
-                {
-                    unitsOnGrid[u].Attack();
-                }
-            }
-        }
-
-        public void UnitDiedCallBack(long id)
-        {
-            for (int i = 0; i < unitsOnGrid.Count; i++)
-            {
-                if (unitsOnGrid[i].databaseID == id)
-                {
-                    Destroy(unitsOnGrid[i].healthBar.gameObject);
-                    Destroy(unitsOnGrid[i].gameObject);
-                    unitsOnGrid.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
-        public void UnitDamageCallBack(long id, float damage)
-        {
-
-        }
-
-        public void UnitHealCallBack(long id, float health)
-        {
-
-        }
-
-        public void BuildingAttackCallBack(long id, long target)
-        {
-            int u = -1;
-            int b = -1;
-            for (int i = 0; i < buildingsOnGrid.Count; i++)
-            {
-                if (buildingsOnGrid[i].id == id)
-                {
-                    if (buildingsOnGrid[i].building.data.radius > 0 && buildingsOnGrid[i].building.data.rangedSpeed > 0)
-                    {
-                        b = i;
-                    }
-                    break;
-                }
-            }
-            if (b >= 0)
-            {
-                for (int i = 0; i < unitsOnGrid.Count; i++)
-                {
-                    if (unitsOnGrid[i].databaseID == target)
-                    {
-                        u = i;
-                        break;
-                    }
-                }
-                if (u >= 0)
-                {
-                    buildingsOnGrid[b].building.LookAt(unitsOnGrid[u].transform.position);
-                    UI_Projectile projectile = buildingsOnGrid[b].building.GetProjectile();
-                    Transform muzzle = buildingsOnGrid[b].building.GetMuzzle();
-                    if (projectile != null && muzzle != null)
-                    {
-                        projectile = Instantiate(projectile, muzzle.position, Quaternion.LookRotation(unitsOnGrid[u].transform.position - muzzle.position, Vector3.up));
-                        projectile.Initialize(muzzle.position, unitsOnGrid[u].targetPoint != null ? unitsOnGrid[u].targetPoint : unitsOnGrid[u].transform, buildingsOnGrid[b].building.data.rangedSpeed * Data.gridCellSize, UI_Projectile.GetCutveHeight(buildingsOnGrid[b].building.id));
-                    }
-                }
-            }
-        }
-
-        public void BuildingDamageCallBack(long id, float damage)
-        {
-            //UpdateLoots();
-        }
-
-        public void BuildingDestroyedCallBack(long id, double percentage)
-        {
-            if (percentage > 0)
-            {
-                _percentageText.text = Mathf.RoundToInt((float)(battle.percentage * 100f)).ToString() + "%";
-            }
-            for (int i = 0; i < buildingsOnGrid.Count; i++)
-            {
-                if (buildingsOnGrid[i].id == id)
-                {
-                    Destroy(buildingsOnGrid[i].building.gameObject);
-                    buildingsOnGrid.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
-        #endregion
-
     }
 }

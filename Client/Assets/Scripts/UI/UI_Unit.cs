@@ -35,7 +35,6 @@ namespace DevelopersHub.ClashOfWhatecer
         {
             _housingUnit = unit.housing;
             _housingText.text = unit.housing.ToString();
-            _titleText.text = Language.instanse.GetUnitName(_id);
             if (Language.instanse.IsRTL && _titleText.horizontalAlignment == HorizontalAlignmentOptions.Left)
             {
                 _titleText.horizontalAlignment = HorizontalAlignmentOptions.Right;
@@ -127,7 +126,6 @@ namespace DevelopersHub.ClashOfWhatecer
         private void Info()
         {
             SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Info.instanse.OpenUnitInfo(_id);
         }
 
     }

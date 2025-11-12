@@ -84,26 +84,23 @@ namespace DevelopersHub.ClashOfWhatecer
             //SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
             if (Building.buildInstanse != null/* && UI_Main.instanse._grid.CanPlaceBuilding(Building.instanse, Building.instanse.currentX, Building.instanse.currentY)*/)
             {
-                if (!UI_WarLayout.instanse.isActive)
+                if (!CheckLimit())
                 {
-                    if (!CheckLimit())
-                    {
-                        Cancel();
-                        return;
-                    }
+                    Cancel();
+                    return;
+                }
 
-                    if (Building.buildInstanse.serverIndex >= 0)
-                    {
-                        Player.instanse.data.gems -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGems;
-                        Player.instanse.elixir -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredElixir;
-                        Player.instanse.gold -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGold;
-                        Player.instanse.darkElixir -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredDarkElixir;
+                if (Building.buildInstanse.serverIndex >= 0)
+                {
+                    Player.instanse.data.gems -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGems;
+                    Player.instanse.elixir -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredElixir;
+                    Player.instanse.gold -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGold;
+                    Player.instanse.darkElixir -= Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredDarkElixir;
 
-                        Building.buildInstanse.placeGemCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGems;
-                        Building.buildInstanse.placeElixirCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredElixir;
-                        Building.buildInstanse.placeGoldCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGold;
-                        Building.buildInstanse.placeDarkElixirCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredDarkElixir;
-                    }
+                    Building.buildInstanse.placeGemCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGems;
+                    Building.buildInstanse.placeElixirCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredElixir;
+                    Building.buildInstanse.placeGoldCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGold;
+                    Building.buildInstanse.placeDarkElixirCost = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredDarkElixir;
                 }
                 isBuildingWall = (Building.buildInstanse.id == Data.BuildingID.wall);
                 if (!isBuildingWall)
@@ -117,16 +114,9 @@ namespace DevelopersHub.ClashOfWhatecer
                 packet.Write(SystemInfo.deviceUniqueIdentifier);
                 packet.Write(Building.buildInstanse.id.ToString());
                 packet.Write(Building.buildInstanse.currentX);
-                packet.Write(Building.buildInstanse.currentY);
-                packet.Write(UI_WarLayout.instanse.isActive ? 2 : 1);
-                packet.Write(UI_WarLayout.instanse.placingID);
+                packet.Write(Building.buildInstanse.currentY);              
                 Building.buildInstanse.lastChange = DateTime.Now;
-                Sender.TCP_Send(packet);
-                if (UI_WarLayout.instanse.isActive && UI_WarLayout.instanse.placingItem != null)
-                {
-                    Destroy(UI_WarLayout.instanse.placingItem);
-                    UI_WarLayout.instanse.placingItem = null;
-                }
+                Sender.TCP_Send(packet);              
                 BuildConf();
                 if (isBuildingWall)
                 {
@@ -176,38 +166,20 @@ namespace DevelopersHub.ClashOfWhatecer
         private void CheckeWall()
         {
             int warLayoutIndex = -1;
-                    bool haveMoreWall = false;
-                    if (UI_WarLayout.instanse.isActive)
-                    {
-                        if (UI_WarLayout.instanse.buildingItems != null)
-                        {
-                            for (int i = 0; i < UI_WarLayout.instanse.buildingItems.Count; i++)
-                            {
-                                if (UI_WarLayout.instanse.buildingItems[i] != null && UI_WarLayout.instanse.buildingItems[i].globalID == Data.BuildingID.wall)
-                                {
-                                    haveMoreWall = true;
-                                    warLayoutIndex = i;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        int townhallLevel = 1;
-                        int haveCount = 0;
-                        for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
-                        {
-                            if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall) { townhallLevel = Player.instanse.data.buildings[i].level; }
-                            if (Player.instanse.data.buildings[i].id != Data.BuildingID.wall) { continue; }
-                            haveCount++;
-                        }
-                        Data.BuildingCount limit = Data.GetBuildingLimits(townhallLevel, Data.BuildingID.wall.ToString());
-                        if (limit != null && haveCount < limit.count)
-                        {
-                            haveMoreWall = true;
-                        }
-                    }
+            bool haveMoreWall = false;                   
+                int townhallLevel = 1;
+                int haveCount = 0;
+                for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
+                {
+                    if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall) { townhallLevel = Player.instanse.data.buildings[i].level; }
+                    if (Player.instanse.data.buildings[i].id != Data.BuildingID.wall) { continue; }
+                    haveCount++;
+                }
+                Data.BuildingCount limit = Data.GetBuildingLimits(townhallLevel, Data.BuildingID.wall.ToString());
+                if (limit != null && haveCount < limit.count)
+                {
+                    haveMoreWall = true;
+                }                   
                     if (haveMoreWall)
                     {
                         UI_Build.instanse.wallsBuilt.Add(new Vector2Int(UI_Build.instanse.wallX, UI_Build.instanse.wallY));
@@ -326,14 +298,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void PlaceWall(int x, int y, int warIndex)
         {
-            if (warIndex >= 0)
-            {
-                UI_WarLayout.instanse.buildingItems[warIndex].PlaceWall(x, y);
-            }
-            else
-            {
-                UI_Shop.instanse.PlaceBuilding(Data.BuildingID.wall, x, y);
-            }
+            UI_Shop.instanse.PlaceBuilding(Data.BuildingID.wall, x, y);
         }
 
         public void BuildConf()
@@ -341,12 +306,7 @@ namespace DevelopersHub.ClashOfWhatecer
             if (Building.buildInstanse != null)
             {
                 CameraController.instanse.isPlacingBuilding = false;
-                Building.buildInstanse.BuildForFirstTimeStarted();
-                if (UI_WarLayout.instanse.isActive && UI_WarLayout.instanse.placingItem != null)
-                {
-                    UI_WarLayout.instanse.placingItem.SetActive(true);
-                    UI_WarLayout.instanse.placingItem = null;
-                }
+                Building.buildInstanse.BuildForFirstTimeStarted();              
             }
         }
 
@@ -355,12 +315,7 @@ namespace DevelopersHub.ClashOfWhatecer
             if (Building.buildInstanse != null)
             {
                 CameraController.instanse.isPlacingBuilding = false;
-                Building.buildInstanse.RemovedFromGrid();
-                if (UI_WarLayout.instanse.isActive && UI_WarLayout.instanse.placingItem != null)
-                {
-                    UI_WarLayout.instanse.placingItem.SetActive(true);
-                    UI_WarLayout.instanse.placingItem = null;
-                }
+                Building.buildInstanse.RemovedFromGrid();                
             }
         }
 

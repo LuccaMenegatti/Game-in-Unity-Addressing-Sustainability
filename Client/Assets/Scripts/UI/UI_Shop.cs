@@ -14,9 +14,6 @@ namespace DevelopersHub.ClashOfWhatecer
         [SerializeField] private Button _closeButton = null;
         [SerializeField] public RectTransform _buildingsGrid = null;
         [SerializeField] public TextMeshProUGUI _goldText = null;
-        [SerializeField] public TextMeshProUGUI _elixirText = null;
-        [SerializeField] public TextMeshProUGUI _darkText = null;
-        [SerializeField] public TextMeshProUGUI _gemsText = null;
         [SerializeField] private UI_Building _buildingPrefab = null;
         [SerializeField] private Data.BuildingID[] _buildingsAvailable = null;
 
@@ -65,9 +62,6 @@ namespace DevelopersHub.ClashOfWhatecer
             if (status)
             {
                 _goldText.text = Player.instanse.gold.ToString();
-                _elixirText.text = Player.instanse.elixir.ToString();
-                _darkText.text = Player.instanse.darkElixir.ToString();
-                _gemsText.text = Player.instanse.data.gems.ToString();
                 _buildingsGrid.anchoredPosition = new Vector2(0, _buildingsGrid.anchoredPosition.y);
 
                 int _workers = 0;
@@ -132,7 +126,7 @@ namespace DevelopersHub.ClashOfWhatecer
                     data.rows = Player.instanse.initializationData.serverBuildings[i].rows;
                     data.buildTime = Player.instanse.initializationData.serverBuildings[i].buildTime;
                     sbi = i;
-                    havrResources = Player.instanse.data.gems >= Player.instanse.initializationData.serverBuildings[i].requiredGems && Player.instanse.elixir >= Player.instanse.initializationData.serverBuildings[i].requiredElixir && Player.instanse.gold >= Player.instanse.initializationData.serverBuildings[i].requiredGold && Player.instanse.darkElixir >= Player.instanse.initializationData.serverBuildings[i].requiredDarkElixir;
+                    havrResources = Player.instanse.gold >= Player.instanse.initializationData.serverBuildings[i].requiredGold;
                     break;
                 }
 
@@ -173,6 +167,5 @@ namespace DevelopersHub.ClashOfWhatecer
             SetStatus(false);
             UI_Main.instanse.SetStatus(true);
         }
-
     }
 }

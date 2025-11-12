@@ -24,8 +24,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void Clicked()
         {
-            LanguageSwitch.instanse.Switch(id);
-        }
 
+        }
     }
 }

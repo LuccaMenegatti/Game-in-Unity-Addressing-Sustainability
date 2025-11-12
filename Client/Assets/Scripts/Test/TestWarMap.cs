@@ -9,8 +9,7 @@ public class TestWarMap : MonoBehaviour
     public int columns = 4;
     public int count = 50;
     public bool reverse = false;
-    public RectTransform root = null;
-    public DevelopersHub.ClashOfWhatecer.UI_WarMember prefab = null;
+    public RectTransform root = null;   
     private float sizeY, spaceY, sizeX, spaceX = 0;
 
     private List<RectTransform> GetRects()
@@ -72,12 +71,7 @@ public class TestWarMap : MonoBehaviour
             for (int i = 0; i < rects.Count; i++)
             {
                 int c = Mathf.CeilToInt((float)(i + 1) / (float)rows);
-                int r = rows - ((c * rows) - (i + 1));
-                DevelopersHub.ClashOfWhatecer.UI_WarMember warMember = rects[i].GetComponentInChildren<DevelopersHub.ClashOfWhatecer.UI_WarMember>(true);
-                if (warMember != null)
-                {
-                    warMember.Initialize(null, 0, null, reverse);
-                }
+                int r = rows - ((c * rows) - (i + 1));                             
 
                 Vector2 position = Vector2.zero;
                 position.x = reverse ? (spaceX * c) : 1f - (spaceX * c);
@@ -106,21 +100,7 @@ public class TestWarMap : MonoBehaviour
 
     public void Create()
     {
-        List<RectTransform> rects = GetRects();
-        if (rects != null && prefab != null)
-        {
-            for (int i = 0; i < rects.Count; i++)
-            {
-                if (rects[i] != null)
-                {
-                    DevelopersHub.ClashOfWhatecer.UI_WarMember warMember = rects[i].GetComponentInChildren<DevelopersHub.ClashOfWhatecer.UI_WarMember>(true);
-                    if (warMember == null)
-                    {
-                        Instantiate(prefab, rects[i]);
-                    }
-                }
-            }
-        }
+        List<RectTransform> rects = GetRects();      
     }
 
     public void Remove()
@@ -131,12 +111,8 @@ public class TestWarMap : MonoBehaviour
             for (int i = 0; i < rects.Count; i++)
             {
                 if (rects[i] != null)
-                {
-                    DevelopersHub.ClashOfWhatecer.UI_WarMember warMember = rects[i].GetComponentInChildren<DevelopersHub.ClashOfWhatecer.UI_WarMember>(true);
-                    if (warMember != null)
-                    {
-                        DestroyImmediate(warMember.gameObject);
-                    }
+                {                  
+                    
                 }
             }
         }

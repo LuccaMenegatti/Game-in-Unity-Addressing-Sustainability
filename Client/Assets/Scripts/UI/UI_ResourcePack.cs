@@ -92,7 +92,6 @@ namespace DevelopersHub.ClashOfWhatecer
         private void Clicked()
         {
             SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            UI_Store.instanse.GoingToBuyResource(_pack);
             Packet packet = new Packet();
             packet.Write((int)Player.RequestsID.BUYRESOURCE);
             packet.Write((int)_pack);

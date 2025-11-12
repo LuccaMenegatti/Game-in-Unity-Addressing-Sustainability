@@ -32,7 +32,6 @@ namespace DevelopersHub.ClashOfWhatecer
         private void Start()
         {
             _button.onClick.AddListener(Clicked);
-            _buttonInfo.onClick.AddListener(Info);
         }
 
         public void Initialize()
@@ -42,7 +41,6 @@ namespace DevelopersHub.ClashOfWhatecer
             _normalPanel.SetActive(false);
             _maxPanel.SetActive(false);
             _researchingPanel.SetActive(false);
-            _titleText.text = Language.instanse.GetUnitName(_id);
             if (Language.instanse.IsRTL && _titleText.horizontalAlignment == HorizontalAlignmentOptions.Left)
             {
                 _titleText.horizontalAlignment = HorizontalAlignmentOptions.Right;
@@ -159,11 +157,5 @@ namespace DevelopersHub.ClashOfWhatecer
                 }
             }
         }
-
-        private void Info()
-        {
-            UI_Info.instanse.OpenUnitInfo(_id);
-        }
-
     }
 }

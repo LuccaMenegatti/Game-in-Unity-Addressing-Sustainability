@@ -42,11 +42,12 @@ namespace DevelopersHub.ClashOfWhatecer
             }
             _titleText.ForceMeshUpdate(true);
             Sprite icon = AssetsBank.GetBuildingIcon(_id);
-            if(icon != null)
+            if (icon != null)
             {
                 _icon.sprite = icon;
             }
-            if(building != null)
+
+            if (building != null)
             {
                 _button.interactable = haveWorker;
                 int townHallLevel = 1;
@@ -64,10 +65,11 @@ namespace DevelopersHub.ClashOfWhatecer
                 }
 
                 Data.BuildingCount limits = Data.GetBuildingLimits(townHallLevel, _id.ToString());
-                if(limits != null)
+
+                if (limits != null)
                 {
                     _countText.text = count.ToString() + "/" + limits.count.ToString();
-                    if(count >= limits.count)
+                    if (count >= limits.count)
                     {
                         _button.interactable = false;
                     }
@@ -80,39 +82,10 @@ namespace DevelopersHub.ClashOfWhatecer
 
                 _timeText.text = Tools.SecondsToTimeFormat(building.buildTime);
 
-                if (building.requiredGold > 0)
-                {
-                    _resourceText.text = building.requiredGold.ToString();
-                    _resourceIcon.sprite = AssetsBank.instanse.goldIcon;
-                }
-                else if (building.requiredElixir > 0)
-                {
-                    _resourceText.text = building.requiredElixir.ToString();
-                    _resourceIcon.sprite = AssetsBank.instanse.elixirIcon;
-                }
-                else if (building.requiredDarkElixir > 0)
-                {
-                    _resourceText.text = building.requiredDarkElixir.ToString();
-                    _resourceIcon.sprite = AssetsBank.instanse.darkIcon;
-                }
-                else
-                {
-                    if(_id == Data.BuildingID.buildershut)
-                    {
-                        switch (count)
-                        {
-                            case 0: building.requiredGems = 0; break;
-                            case 1: building.requiredGems = 250; break;
-                            case 2: building.requiredGems = 500; break;
-                            case 3: building.requiredGems = 1000; break;
-                            case 4: building.requiredGems = 2000; break;
-                            default: building.requiredGems = 0; break;
-                        }
-                    }
-                    _resourceText.text = count >= 5 ? "none" : building.requiredGems.ToString();
-                    _resourceIcon.sprite = AssetsBank.instanse.gemsIcon;
-                }
-                if (building.requiredGold <= Player.instanse.gold && building.requiredElixir <= Player.instanse.elixir && building.requiredDarkElixir <= Player.instanse.darkElixir && building.requiredGems <= Player.instanse.data.gems)
+                _resourceText.text = building.requiredGold.ToString();
+                _resourceIcon.sprite = AssetsBank.instanse.goldIcon;
+
+                if (building.requiredGold <= Player.instanse.gold)
                 {
                     _resourceText.color = Color.white;
                 }
@@ -128,7 +101,7 @@ namespace DevelopersHub.ClashOfWhatecer
                 _timeText.text = "0";
                 _resourceText.text = "0";
                 _countText.text = "0/0";
-                _resourceIcon.sprite = AssetsBank.instanse.gemsIcon;
+                _resourceIcon.sprite = AssetsBank.instanse.goldIcon;
                 _button.interactable = false;
             }
             _resourceText.ForceMeshUpdate(true);

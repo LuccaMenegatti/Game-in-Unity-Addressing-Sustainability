@@ -181,8 +181,7 @@ namespace DevelopersHub.ClashOfWhatecer
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.clanButton.gameObject)
                             {
-                                handled = true;
-                                UI_Clan.instanse.Open();
+                                handled = true;                               
                                 SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.spellButton.gameObject)
@@ -226,51 +225,7 @@ namespace DevelopersHub.ClashOfWhatecer
                         Building.selectedInstanse.Deselected();
                     }
                 }
-            }
-            else if (UI_Battle.instanse.isActive)
-            {
-                if (results.Count <= 0 && (UI_Battle.instanse.selectedUnit >= 0 || UI_Battle.instanse.selectedSpell >= 0))
-                {
-                    Vector3 planePosition = CameraScreenPositionToWorldPosition(position);
-                    Vector3Int gridPos = UI_Main.instanse._grid.grid.WorldToCell(planePosition);
-                    if (gridPos.x >= (0 - Data.battleGridOffset) && gridPos.x < (Data.gridSize + Data.battleGridOffset) && gridPos.y >= (0 - Data.battleGridOffset) && gridPos.y < (Data.gridSize + Data.battleGridOffset))
-                    {
-                        UI_Battle.instanse.PlaceUnit(Mathf.FloorToInt(gridPos.x), Mathf.FloorToInt(gridPos.y));
-                    }
-                }
-            }
-            else if (UI_WarLayout.instanse.isActive)
-            {
-                if (results.Count <= 0)
-                {
-                    bool found = false;
-                    Vector3 planePosition = CameraScreenPositionToWorldPosition(position);
-                    Vector3Int gridPos = UI_Main.instanse._grid.grid.WorldToCell(planePosition);
-                    for (int i = 0; i < UI_Main.instanse._grid.buildings.Count; i++)
-                    {
-                        if (UI_Main.instanse._grid.IsGridPositionIsOnBuilding(new Vector2Int(gridPos.x, gridPos.y), UI_Main.instanse._grid.buildings[i].currentX, UI_Main.instanse._grid.buildings[i].currentY, UI_Main.instanse._grid.buildings[i].rows, UI_Main.instanse._grid.buildings[i].columns))
-                        {
-                            found = true;
-                            UI_Main.instanse._grid.buildings[i].Selected();
-                            break;
-                        }
-                    }
-                    if (!found)
-                    {
-                        if (Building.selectedInstanse != null)
-                        {
-                            Building.selectedInstanse.Deselected();
-                        }
-                    }
-                }
-                else
-                {
-                    if (Building.selectedInstanse != null)
-                    {
-                        Building.selectedInstanse.Deselected();
-                    }
-                }
-            }
+            }                      
             else if (UI_Scout.instanse.isActive)
             {
                 if (results.Count <= 0)
@@ -316,19 +271,8 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void MoveStarted()
         {
-            if (_zooming == false && (UI_Main.instanse.isActive || UI_Battle.instanse.isActive || UI_WarLayout.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false && UI_Store.instanse.isActive == false)
-            {
-                if (UI_WarLayout.instanse.isActive)
-                {
-                    PointerEventData data = new PointerEventData(EventSystem.current);
-                    data.position = inputs.Main.PointerPosition.ReadValue<Vector2>();
-                    List<RaycastResult> results = new List<RaycastResult>();
-                    EventSystem.current.RaycastAll(data, results);
-                    if (results.Count > 0)
-                    {
-                        return;
-                    }
-                }
+            if (_zooming == false && (UI_Main.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
+            {              
                 if (_building)
                 {
                     _buildBasePosition = CameraScreenPositionToWorldPosition(inputs.Main.PointerPosition.ReadValue<Vector2>());
@@ -381,7 +325,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void ZoomStarted()
         {
-            if ((UI_Main.instanse.isActive || UI_Battle.instanse.isActive || UI_WarLayout.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false && UI_Store.instanse.isActive == false)
+            if ((UI_Main.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
             {
                 _moveRootBasePosition = _root.position;
                 Vector2 touch0 = inputs.Main.TouchPosition0.ReadValue<Vector2>();

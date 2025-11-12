@@ -53,21 +53,6 @@
             }
         }
 
-        private Language.LanguageID language = Language.LanguageID.english;
-
-        public void Switch(Language.LanguageID id)
-        {
-            language = id;
-            switch (Language.instanse.language)
-            {
-                case Language.LanguageID.persian:
-                    MessageBox.Open(3, 0.8f, true, MessageResponded, new string[] { "تغییر زبان به " + Language.instanse.GetLanguageName(id) + "؟" }, new string[] { "بله", "خیر" });
-                    break;
-                default:
-                    MessageBox.Open(3, 0.8f, true, MessageResponded, new string[] { "Change language to " + Language.instanse.GetLanguageName(id) + "?" }, new string[] { "Yes", "No" });
-                    break;
-            }
-        }
-
+        private Language.LanguageID language = Language.LanguageID.english;      
     }
 }

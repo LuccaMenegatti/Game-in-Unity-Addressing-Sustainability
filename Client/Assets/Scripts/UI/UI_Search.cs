@@ -78,29 +78,6 @@ namespace DevelopersHub.ClashOfWhatecer
                 _findButton.interactable = true;
                 _costText.color = Color.white;
             }
-        }
-
-        public void FindResponded(long target, Data.OpponentData opponent)
-        {
-            if(target > 0 && opponent != null && target != lastTarget)
-            {
-                SetStatus(false);
-                bool attack = UI_Battle.instanse.Display(opponent.data, opponent.buildings, target, Data.BattleType.normal);
-                if (attack)
-                {
-                    lastTarget = target;
-                }
-                else
-                {
-                    UI_Main.instanse.SetStatus(true);
-                }
-            }
-            else
-            {
-                UI_Battle.instanse.NoTarget();
-                Debug.Log("No target found.");
-            }
-        }
-
+        }      
     }
 }

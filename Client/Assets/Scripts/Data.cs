@@ -720,93 +720,8 @@
             public bool hasReply = false;
         }
 
-        public static List<Battle.Building> BuildingsToBattleBuildings(List<Building> buildings, BattleType type)
-        {
-            List<Battle.Building> battleBuildings = new List<Battle.Building>();
-            int townhallLevel = 1;
-            for (int i = 0; i < buildings.Count; i++)
-            {
-                if (buildings[i].id == Data.BuildingID.townhall)
-                {
-                    townhallLevel = buildings[i].level;
-                    break;
-                }
-            }
-
-            for (int i = 0; i < buildings.Count; i++)
-            {
-                if (buildings[i].databaseID != buildings[i].databaseID || buildings[i].id != buildings[i].id || buildings[i].health != buildings[i].health || buildings[i].damage != buildings[i].damage || buildings[i].percentage != buildings[i].percentage)
-                {
-                    return null;
-                }
-
-                Battle.Building building = new Battle.Building();
-                building.building = buildings[i];
-                if (type == Data.BattleType.war)
-                {
-                    building.building.x = building.building.warX;
-                    building.building.y = building.building.warY;
-                }
-
-                if (building.building.x < 0 || building.building.y < 0)
-                {
-                    continue;
-                }
-
-                building.building.x += Data.battleGridOffset;
-                building.building.y += Data.battleGridOffset;
-
-                // bool storage = false;
-                switch (building.building.id)
-                {
-                    case Data.BuildingID.townhall:
-                        building.lootGoldStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.goldStorage);
-                        building.lootElixirStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.elixirStorage);
-                        building.lootDarkStorage = Data.GetStorageDarkElixirLoot(townhallLevel, building.building.darkStorage);
-                        // storage = true;
-                        break;
-                    case Data.BuildingID.goldmine:
-                        building.lootGoldStorage = Data.GetMinesGoldAndElixirLoot(townhallLevel, building.building.goldStorage);
-                        // storage = true;
-                        break;
-                    case Data.BuildingID.goldstorage:
-                        building.lootGoldStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.goldStorage);
-                        // storage = true;
-                        break;
-                    case Data.BuildingID.elixirmine:
-                        building.lootElixirStorage = Data.GetMinesGoldAndElixirLoot(townhallLevel, building.building.elixirStorage);
-                        // storage = true;
-                        break;
-                    case Data.BuildingID.elixirstorage:
-                        building.lootElixirStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.elixirStorage);
-                        // storage = true;
-                        break;
-                    case Data.BuildingID.darkelixirmine:
-                        building.lootDarkStorage = Data.GetMinesDarkElixirLoot(townhallLevel, building.building.darkStorage);
-                        // storage = true;
-                        break;
-                    case Data.BuildingID.darkelixirstorage:
-                        building.lootDarkStorage = Data.GetStorageDarkElixirLoot(townhallLevel, building.building.darkStorage);
-                        // storage = true;
-                        break;
-                }
-                /*
-                if (storage)
-                {
-                    Data.BattleStartBuildingData st = new Data.BattleStartBuildingData();
-                    st.id = building.building.id;
-                    st.databaseID = building.building.databaseID;
-                    st.lootGoldStorage = building.building.goldStorage;
-                    st.lootElixirStorage = building.building.elixirStorage;
-                    st.lootDarkStorage = building.building.darkStorage;
-                    startData.Add(st);
-                }
-                */
-                battleBuildings.Add(building);
-            }
-            return battleBuildings;
-        }
-
+        
+               
         public class BattleFrameUnit
         {
             public long id = 0;
@@ -830,7 +745,6 @@
 
         public class BattleData
         {
-            public Battle battle = null;
             public BattleType type = BattleType.normal;
             public List<BattleFrame> savedFrames = new List<BattleFrame>();
             public List<BattleFrame> frames = new List<BattleFrame>();

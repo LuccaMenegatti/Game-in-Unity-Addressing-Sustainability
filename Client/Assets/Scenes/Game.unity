@@ -41053,7 +41053,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Players Ranking
+  m_text: Ranking de Jogadores
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
   m_sharedMaterial: {fileID: -1847478308233949354, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
@@ -41126,7 +41126,7 @@ MonoBehaviour:
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
   preserveNumbers: 0
   farsi: 1
-  originalText: Players Ranking
+  originalText: Ranking de Jogadores
   fixTags: 1
   forceFix: 0
 --- !u!114 &1369225698
@@ -64359,6 +64359,22 @@ PrefabInstance:
     - target: {fileID: 1182588735128508009, guid: 689acdbff4ea50b4fbd7bab70764a7d5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258485504296818760, guid: 689acdbff4ea50b4fbd7bab70764a7d5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8807cb47ec707e94a863bc2cda568b9e, type: 3}
+    - target: {fileID: 1258485504296818760, guid: 689acdbff4ea50b4fbd7bab70764a7d5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.1254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258485504296818760, guid: 689acdbff4ea50b4fbd7bab70764a7d5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7490196
+      objectReference: {fileID: 0}
+    - target: {fileID: 1258485504296818760, guid: 689acdbff4ea50b4fbd7bab70764a7d5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5411765
       objectReference: {fileID: 0}
     - target: {fileID: 9153213096768154945, guid: 689acdbff4ea50b4fbd7bab70764a7d5, type: 3}
       propertyPath: m_Name

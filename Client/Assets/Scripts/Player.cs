@@ -13,8 +13,7 @@
         public Data.Player data = new Data.Player();
         private static Player _instance = null; public static Player instanse { get { return _instance; } }
         public Data.InitializationData initializationData = new Data.InitializationData();
-        private bool _inBattle = false; public static bool inBattle { get { return instanse._inBattle; } set { instanse._inBattle = value; } }
-
+       
         public Data.ServerBuilding GetServerBuilding(Data.BuildingID id, int level)
         {
             for (int i = 0; i < initializationData.serverBuildings.Count; i++)
@@ -105,21 +104,18 @@
         {
             if (connected)
             {
-                if (!_inBattle)
+                if (timer <= 0)
                 {
-                    if (timer <= 0)
+                    if(updating == false)
                     {
-                        if(updating == false)
-                        {
-                            updating = true;
-                            timer = syncTime;
-                            SendSyncRequest();
-                        }
+                        updating = true;
+                        timer = syncTime;
+                        SendSyncRequest();
                     }
-                    else
-                    {
-                        timer -= Time.deltaTime;
-                    }
+                }
+                else
+                {
+                    timer -= Time.deltaTime;
                 }
                 data.nowTime = data.nowTime.AddSeconds(Time.deltaTime);
             }
@@ -159,10 +155,7 @@
                             if(!versionValid)
                             {
                                 switch (Language.instanse.language)
-                                {
-                                    case Language.LanguageID.persian:
-                                        MessageBox.Open(1, 0.9f, false, MessageResponded, new string[] { "این ورژن منقضی شده. لطفاً ورژن جدید بازی را دانلود کنید." }, new string[] { "خروج" });
-                                        break;
+                                {                                 
                                     default:
                                         MessageBox.Open(1, 0.9f, false, MessageResponded, new string[] { "This version is expired. Please download the new version of the game." }, new string[] { "Exit" });
                                         break;

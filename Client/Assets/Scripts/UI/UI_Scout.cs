@@ -154,7 +154,6 @@
             _active = false;
             isStarted = false;
             Time.timeScale = 1f;       
-            ClearUnitsOnGrid();
             UI_Main.instanse._grid.Clear();
             Player.instanse.SyncData(Player.instanse.data);
             if (_backPanel == Player.Panel.clan)
@@ -169,12 +168,9 @@
         }
 
         private Data.BattleReport _report = null;
-        private Battle battle = null;
         private bool isStarted = false;
         private DateTime baseTime;
-        private DateTime pauseTime;       
-        private List<BattleUnit> unitsOnGrid = new List<BattleUnit>();
-        private List<Battle.Building> battleBuildings = new List<Battle.Building>();
+        private DateTime pauseTime;
 
         public bool Display()
         {
@@ -213,144 +209,46 @@
                 }
             }
             */
-            battleBuildings.Clear();
 
             for (int i = 0; i < _report.buildings.Count; i++)
             {
-
                 if (_report.buildings[i].x < 0 || _report.buildings[i].y < 0)
                 {
                     continue;
                 }
 
-                Battle.Building building = new Battle.Building();
-                building.building = _report.buildings[i];
-                switch (building.building.id)
+                _timerText.text = TimeSpan.FromSeconds(Data.battleDuration).ToString(@"mm\:ss");
+
+                UI_Main.instanse._grid.Clear();
+
+                if (_type == Data.BattleType.normal)
                 {
-                    case Data.BuildingID.townhall:
-                        building.lootGoldStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.goldStorage);
-                        building.lootElixirStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.elixirStorage);
-                        building.lootDarkStorage = Data.GetStorageDarkElixirLoot(townhallLevel, building.building.darkStorage);
-                        break;
-                    case Data.BuildingID.goldmine:
-                        building.lootGoldStorage = Data.GetMinesGoldAndElixirLoot(townhallLevel, building.building.goldStorage);
-                        break;
-                    case Data.BuildingID.goldstorage:
-                        building.lootGoldStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.goldStorage);
-                        break;
-                    case Data.BuildingID.elixirmine:
-                        building.lootElixirStorage = Data.GetMinesGoldAndElixirLoot(townhallLevel, building.building.elixirStorage);
-                        break;
-                    case Data.BuildingID.elixirstorage:
-                        building.lootElixirStorage = Data.GetStorageGoldAndElixirLoot(townhallLevel, building.building.elixirStorage);
-                        break;
-                    case Data.BuildingID.darkelixirmine:
-                        building.lootDarkStorage = Data.GetMinesDarkElixirLoot(townhallLevel, building.building.darkStorage);
-                        break;
-                    case Data.BuildingID.darkelixirstorage:
-                        building.lootDarkStorage = Data.GetStorageDarkElixirLoot(townhallLevel, building.building.darkStorage);
-                        break;
-                }
-                battleBuildings.Add(building);
-            }
-
-            _timerText.text = TimeSpan.FromSeconds(Data.battleDuration).ToString(@"mm\:ss");
-
-            ClearUnitsOnGrid();
-
-            UI_Main.instanse._grid.Clear();           
-          
-            if (_type == Data.BattleType.normal)
-            {
-                int townHallLevel = 1;
-                for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
-                {
-                    if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall)
+                    int townHallLevel = 1;
+                    for (i = 0; i < Player.instanse.data.buildings.Count; i++)
                     {
-                        townHallLevel = Player.instanse.data.buildings[i].level;
-                    }
-                }
-            }
-
-            baseTime = DateTime.Now;
-            battle = new Battle();
-            
-            _percentageText.text = Mathf.RoundToInt((float)(battle.percentage * 100f)).ToString() + "%";
-            //UpdateLoots();
-
-            //var trophies = Data.GetBattleTrophies(Player.instanse.data.trophies, player.trophies);
-            //_winTrophiesText.text = trophies.Item1.ToString();
-            //_looseTrophiesText.text = "-" + trophies.Item2.ToString();
-
-
-            isStarted = false;
-
-            return true;
-        }
-
-        private void Update()
-        {
-            if (battle != null && battle.end == false && isStarted)
-            {
-                if (battle.frameCount < _report.totalFrames)
-                {
-                    TimeSpan span = DateTime.Now - baseTime;
-                    if (_timerText != null)
-                    {
-                        _timerText.text = TimeSpan.FromSeconds(Data.battleDuration - span.TotalSeconds).ToString(@"mm\:ss");
-                    }
-                    int frame = (int)Math.Floor(span.TotalSeconds / Data.battleFrameRate);
-                    if (frame > battle.frameCount)
-                    {
-                        for (int i = 0; i < _report.frames.Count; i++)
+                        if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall)
                         {
-                            if (_report.frames[i].frame == battle.frameCount + 1)
-                            {
-                                for (int u = 0; u < _report.frames[i].units.Count; u++)
-                                {
-                                    battle.AddUnit(_report.frames[i].units[u].unit, _report.frames[i].units[u].x, _report.frames[i].units[u].y);
-                                    for (int s = 0; s < _report.frames[i].spells.Count; s++)
-                                    {
-                                        battle.AddSpell(_report.frames[i].spells[s].spell, _report.frames[i].spells[s].x, _report.frames[i].spells[s].y);
-                                    }
-                                    break;
-                                }
-                            }
-                            battle.ExecuteFrame();
-                        }
-                    }
-                    else
-                    {
-                        _playButton.gameObject.SetActive(false);
-                        _pauseButton.gameObject.SetActive(false);
-                        _replayButton.gameObject.SetActive(true);
-                        isStarted = false;
-                        Transform[] bars = healthBarGrid.GetComponentsInChildren<Transform>();
-                        if (bars != null)
-                        {
-                            for (int i = 0; i < bars.Length; i++)
-                            {
-                                if (bars[i] != healthBarGrid.transform)
-                                {
-                                    Destroy(bars[i].gameObject);
-                                }
-                            }
+                            townHallLevel = Player.instanse.data.buildings[i].level;
                         }
                     }
                 }
-            }
-        }
 
-        public void ClearUnitsOnGrid()
-        {
-            for (int i = 0; i < unitsOnGrid.Count; i++)
-            {
-                if (unitsOnGrid[i])
-                {
-                    Destroy(unitsOnGrid[i].gameObject);
-                }
+                baseTime = DateTime.Now;
+
+                _percentageText.text = Mathf.RoundToInt((float)(100f)).ToString() + "%";
+                //UpdateLoots();
+
+                //var trophies = Data.GetBattleTrophies(Player.instanse.data.trophies, player.trophies);
+                //_winTrophiesText.text = trophies.Item1.ToString();
+                //_looseTrophiesText.text = "-" + trophies.Item2.ToString();
+
+
+                isStarted = false;
+
+                return true;
             }
-            unitsOnGrid.Clear();
-        }
+
+            return false;
+        }     
     }
 }

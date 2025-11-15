@@ -36,8 +36,8 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public void ShowOnTimerEnd()
         {
-            int pontosGanhos = 1500;
-            int dinheiroGanho = 250;
+            int pontosGanhos = Player.instanse.elixir;
+            int dinheiroGanho = Player.instanse.gold;
 
             Show(pontosGanhos, dinheiroGanho);
         }

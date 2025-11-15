@@ -77,6 +77,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
             public int trophies = 0;
             public int xp = 0;
             public int level = 0;
+            public int gold = 0;
+            public int elixir = 0;
         }
 
         public static string EncodeString(string input)

@@ -307,7 +307,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         xl.RemoveAt(index);
                         yl.RemoveAt(index);
                     }
-                    AddResources(connection, initializationData.accountID, 10000, 10000, 0, 250);
+                    AddResources(connection, initializationData.accountID, 1000, 0, 0, 250);
                 }
                 query = String.Format("UPDATE accounts SET is_online = 1, client_id = {0}, last_login = NOW() WHERE id = {1}", id, initializationData.accountID);
                 using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -853,9 +853,40 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
                     response.page = page;
 
-                    int start = ((page - 1) * Data.clansPerPage) + 1;
-                    int end = start + Data.clansPerPage;
-                    query = String.Format("SELECT id, name, xp, level, trophies, rank FROM (SELECT id, name, xp, level, trophies, ROW_NUMBER() OVER(ORDER BY trophies DESC) AS 'rank' FROM accounts) AS ranks WHERE ranks.rank >= {0} AND ranks.rank < {1}", start, end);
+                    int start = ((page - 1) * players_ranking_per_page) + 1;
+                    int end = start + players_ranking_per_page;
+
+                    query = String.Format(
+                        @"SELECT 
+                            ranks.id, ranks.name, ranks.xp, ranks.level, ranks.trophies, ranks.rank, ranks.gold, ranks.elixir
+                          FROM (
+                            SELECT 
+                                p_stats.id, p_stats.name, p_stats.xp, p_stats.level, p_stats.trophies, p_stats.gold, p_stats.elixir,
+                                ROW_NUMBER() OVER(ORDER BY p_stats.elixir DESC, p_stats.gold DESC) AS 'rank'
+                            FROM (
+                                SELECT 
+                                    a.id, a.name, a.xp, a.level, a.trophies,
+                                    IFNULL(g.total_gold, 0) AS gold,
+                                    IFNULL(e.total_elixir, 0) AS elixir
+                                FROM accounts AS a
+                                LEFT JOIN (
+                                    SELECT account_id, SUM(gold_storage) AS total_gold 
+                                    FROM buildings 
+                                    WHERE global_id IN ('townhall', 'goldstorage') 
+                                    GROUP BY account_id
+                                ) AS g ON a.id = g.account_id
+                                LEFT JOIN (
+                                    SELECT account_id, SUM(elixir_storage) AS total_elixir 
+                                    FROM buildings 
+                                    WHERE global_id IN ('townhall', 'elixirstorage') 
+                                    GROUP BY account_id
+                                ) AS e ON a.id = e.account_id
+                            ) AS p_stats
+                          ) AS ranks
+                          WHERE ranks.rank >= {0} AND ranks.rank < {1}",
+                        start, end
+                    );
+
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         using (MySqlDataReader reader = command.ExecuteReader())
@@ -871,6 +902,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                     int.TryParse(reader["xp"].ToString(), out player.xp);
                                     int.TryParse(reader["level"].ToString(), out player.level);
                                     int.TryParse(reader["trophies"].ToString(), out player.trophies);
+                                    int.TryParse(reader["gold"].ToString(), out player.gold);
+                                    int.TryParse(reader["elixir"].ToString(), out player.elixir);
                                     response.players.Add(player);
                                 }
                             }
@@ -885,7 +918,36 @@ namespace DevelopersHub.RealtimeNetworking.Server
         private static int GetPlayerRank(MySqlConnection connection, long account_id)
         {
             int rank = 0;
-            string query = query = String.Format("SELECT id, rank FROM (SELECT id, ROW_NUMBER() OVER(ORDER BY trophies DESC) AS 'rank' FROM accounts) AS ranks WHERE id = {0}", account_id);
+            string query = String.Format(
+                @"SELECT rank
+                  FROM (
+                    SELECT 
+                        p_stats.id,
+                        ROW_NUMBER() OVER(ORDER BY p_stats.elixir DESC, p_stats.gold DESC) AS 'rank'
+                    FROM (
+                        SELECT 
+                            a.id,
+                            IFNULL(g.total_gold, 0) AS gold,
+                            IFNULL(e.total_elixir, 0) AS elixir
+                        FROM accounts AS a
+                        LEFT JOIN (
+                            SELECT account_id, SUM(gold_storage) AS total_gold 
+                            FROM buildings 
+                            WHERE global_id IN ('townhall', 'goldstorage') 
+                            GROUP BY account_id
+                        ) AS g ON a.id = g.account_id
+                        LEFT JOIN (
+                            SELECT account_id, SUM(elixir_storage) AS total_elixir 
+                            FROM buildings 
+                            WHERE global_id IN ('townhall', 'elixirstorage') 
+                            GROUP BY account_id
+                        ) AS e ON a.id = e.account_id
+                    ) AS p_stats
+                  ) AS ranks
+                  WHERE id = {0}", 
+                account_id
+            );
+
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())

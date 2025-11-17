@@ -64,29 +64,11 @@ namespace DevelopersHub.ClashOfWhatecer
                 _goldText.text = Player.instanse.gold.ToString();
                 _buildingsGrid.anchoredPosition = new Vector2(0, _buildingsGrid.anchoredPosition.y);
 
-                int _workers = 0;
-                int _busyWorkers = 0;
-                if (Player.instanse.data.buildings != null && Player.instanse.data.buildings.Count > 0)
-                {
-                    for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
-                    {
-                        if (Player.instanse.data.buildings[i].isConstructing)
-                        {
-                            _busyWorkers += 1;
-                        }
-                        if(Player.instanse.data.buildings[i].id != Data.BuildingID.buildershut)
-                        {
-                            continue;
-                        }
-                        _workers += 1;
-                    }
-                }
-
                 if (ui_buildings != null)
                 {
                     for (int i = 0; i < ui_buildings.Count; i++)
                     {
-                        ui_buildings[i].Initialize(_workers > _busyWorkers);
+                        ui_buildings[i].Initialize(true);
                     }
                 }
             }

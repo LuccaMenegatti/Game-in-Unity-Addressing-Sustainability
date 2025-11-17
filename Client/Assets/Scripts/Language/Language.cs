@@ -92,10 +92,11 @@
                         case Data.BuildingID.decoration: return "Decoration";
                         case Data.BuildingID.spellfactory: return "Centro Comunitário";
                         case Data.BuildingID.laboratory: return "Eco-Centro";
+                        case Data.BuildingID.tree: return "Árvore";
                         case Data.BuildingID.obstacle:
                             switch (level)
                             {
-                                case 1: case 2: case 3: return "Arvore";
+                                case 1: case 2: case 3: return "Árvore";
                                 case 4: case 5: return "Pedra";
                                 default: return "Obstacle";
                             }                

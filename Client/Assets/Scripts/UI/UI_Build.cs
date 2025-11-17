@@ -114,7 +114,9 @@ namespace DevelopersHub.ClashOfWhatecer
                 packet.Write(SystemInfo.deviceUniqueIdentifier);
                 packet.Write(Building.buildInstanse.id.ToString());
                 packet.Write(Building.buildInstanse.currentX);
-                packet.Write(Building.buildInstanse.currentY);              
+                packet.Write(Building.buildInstanse.currentY);
+                packet.Write(Player.instanse.data.layout);
+                packet.Write((long)0);
                 Building.buildInstanse.lastChange = DateTime.Now;
                 Sender.TCP_Send(packet);              
                 BuildConf();

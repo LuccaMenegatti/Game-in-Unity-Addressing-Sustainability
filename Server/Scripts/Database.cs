@@ -351,7 +351,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         public async static void ChangePlayerName(int id, string name)
         {
             long account_id = Server.clients[id].account;
-            if(account_id > 0)
+            if (account_id > 0)
             {
                 int response = await ChangePlayerNameAsync(account_id, name);
                 Packet packet = new Packet();
@@ -568,11 +568,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         case 2: price = 100; break;
                         case 3: price = 250; break;
                     }
-                    if(gems >= price)
+                    if (gems >= price)
                     {
                         if ((pack == 1 && cooldown1 == 1) || (pack == 2 && cooldown2 == 1) || (pack == 3 && cooldown1 == 3))
                         {
-                            if(SpendResources(connection, account_id, 0, 0, price, 0))
+                            if (SpendResources(connection, account_id, 0, 0, price, 0))
                             {
                                 switch (pack)
                                 {
@@ -775,7 +775,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             using (MySqlConnection connection = GetMysqlConnection())
             {
 
-                
+
                 connection.Close();
             }
             return response;
@@ -846,7 +846,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             page = Convert.ToInt32(Math.Ceiling((double)playerRank / (double)players_ranking_per_page));
                         }
                     }
-                    else if(page <= 0)
+                    else if (page <= 0)
                     {
                         page = 1;
                     }
@@ -944,7 +944,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         ) AS e ON a.id = e.account_id
                     ) AS p_stats
                   ) AS ranks
-                  WHERE id = {0}", 
+                  WHERE id = {0}",
                 account_id
             );
 
@@ -1591,12 +1591,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         }
                     }
                 }
-                if(building != null)
+                if (building != null)
                 {
                     int cost = Data.GetBoostResourcesCost(building.id, building.level);
                     if (SpendResources(connection, account_id, 0, 0, cost, 0))
                     {
-                        if(building.boost >= now)
+                        if (building.boost >= now)
                         {
                             query = String.Format("UPDATE buildings SET boost = boost + INTERVAL 24 HOUR WHERE id = {0}", building_id);
                         }
@@ -1734,7 +1734,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 if (tatgetDark < 0) { tatgetDark = 0; }
 
                 int cost = Data.GetResourceGemCost(tatgetGold, tatgetElixir, tatgetDark);
-                if(SpendResources(connection, account_id, 0, 0, cost, 0))
+                if (SpendResources(connection, account_id, 0, 0, cost, 0))
                 {
                     var add = AddResources(connection, account_id, tatgetGold, tatgetElixir, tatgetDark, 0);
                     response = 1;
@@ -2021,21 +2021,9 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 }
             }
 
-            query = String.Format("DELETE FROM buildings WHERE is_constructing > 0 AND construction_time <= NOW() AND global_id = '{0}'", Data.BuildingID.obstacle.ToString());
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                command.ExecuteNonQuery();
-            }
+            List<Tuple<long, int, int>> playerUpdates = new List<Tuple<long, int, int>>();
 
-            query = String.Format("UPDATE buildings SET level = level + 1, is_constructing = 0, track_time = '{0}' WHERE is_constructing > 0 AND construction_time <= NOW() AND global_id <> '{1}'", time, Data.BuildingID.obstacle.ToString());
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                command.ExecuteNonQuery();
-            }
-
-            Dictionary<long, int> accounts = new Dictionary<long, int>();
-
-            query = String.Format("SELECT buildings.account_id, server_buildings.gained_xp FROM buildings LEFT JOIN server_buildings ON buildings.global_id = server_buildings.global_id AND buildings.level = server_buildings.level WHERE buildings.track_time = '{0}'", time);
+            query = String.Format("SELECT b.account_id, b.global_id, b.level, sb.gained_xp FROM buildings AS b LEFT JOIN server_buildings AS sb ON b.global_id = sb.global_id AND b.level = sb.level WHERE b.is_constructing > 0 AND b.construction_time <= NOW()");
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
@@ -2044,15 +2032,73 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     {
                         while (reader.Read())
                         {
-                            long id = 0;
-                            int xp = 0;
-                            if (long.TryParse(reader["account_id"].ToString(), out id) && int.TryParse(reader["gained_xp"].ToString(), out xp) && xp > 0)
+                            long accountId = 0;
+                            int xpGained = 0;
+                            string globalId = "";
+                            int currentLevel = 0;
+
+                            if (long.TryParse(reader["account_id"].ToString(), out accountId))
                             {
-                                accounts.Add(id, xp);
+                                globalId = reader["global_id"].ToString();
+                                int.TryParse(reader["gained_xp"].ToString(), out xpGained);
+                                int.TryParse(reader["level"].ToString(), out currentLevel);
+
+                                int elixirGained = 0;
+                                switch (globalId)
+                                {
+                                    case "obstacle":
+                                        elixirGained = 0;
+                                        break;
+                                    case "tree":
+                                        if (currentLevel == 0)
+                                        {
+                                            elixirGained = 50;
+                                        }
+                                        else
+                                        {
+                                            elixirGained = 0;
+                                        }
+                                        break;
+                                    case "goldmine":
+                                        elixirGained = 100;
+                                        break;
+                                    case "goldstorage":
+                                        elixirGained = 150;
+                                        break;
+                                    case "elixirmine":
+                                        elixirGained = 150;
+                                        break;
+                                    case "elixirstorage":
+                                        elixirGained = 200;
+                                        break;
+                                    case "armycamp":
+                                        elixirGained = 200;
+                                        break;
+                                    case "spellfactory":
+                                        elixirGained = 300;
+                                        break;
+                                    case "laboratory":
+                                        elixirGained = 400;
+                                        break;
+                                }
+
+                                playerUpdates.Add(new Tuple<long, int, int>(accountId, xpGained, elixirGained));
                             }
                         }
                     }
                 }
+            }
+
+            query = String.Format("DELETE FROM buildings WHERE is_constructing > 0 AND construction_time <= NOW() AND (global_id = '{0}' OR (global_id = '{1}' AND level = 1))", Data.BuildingID.obstacle.ToString(), Data.BuildingID.tree.ToString());
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            query = String.Format("UPDATE buildings SET level = level + 1, is_constructing = 0, track_time = '{0}' WHERE is_constructing > 0 AND construction_time <= NOW() AND global_id <> '{1}' AND (global_id <> '{2}' OR level = 0)", time, Data.BuildingID.obstacle.ToString(), Data.BuildingID.tree.ToString());
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
             }
 
             query = String.Format("UPDATE buildings SET track_time = track_time - INTERVAL 1 HOUR WHERE track_time = '{0}'", time);
@@ -2061,11 +2107,26 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 command.ExecuteNonQuery();
             }
 
-            if (accounts.Count > 0)
+            if (playerUpdates.Count > 0)
             {
-                foreach (var account in accounts)
+                var groupedUpdates = playerUpdates.GroupBy(u => u.Item1)
+                                                .Select(g => new
+                                                {
+                                                    AccountId = g.Key,
+                                                    TotalXp = g.Sum(x => x.Item2),
+                                                    TotalElixir = g.Sum(x => x.Item3)
+                                                });
+
+                foreach (var update in groupedUpdates)
                 {
-                    AddXP(connection, account.Key, account.Value);
+                    if (update.TotalXp > 0)
+                    {
+                        AddXP(connection, update.AccountId, update.TotalXp);
+                    }
+                    if (update.TotalElixir > 0)
+                    {
+                        AddResources(connection, update.AccountId, 0, update.TotalElixir, 0, 0);
+                    }
                 }
             }
         }
@@ -2259,7 +2320,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             command.ExecuteNonQuery();
                         }
                     }
-                    
+
                     Data.BattleReport battleReport = new Data.BattleReport();
                     battleReport.attacker = attacker_id;
                     battleReport.defender = defender_id;
@@ -2389,7 +2450,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         }
                     }
                 }
-                if(count > 0)
+                if (count > 0)
                 {
                     int obsticleColumns = 2;
                     int obsticleRows = 2;
@@ -2424,7 +2485,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             List<int> yList = new List<int>();
                             for (int k = 0; k < Data.gridSize; k++)
                             {
-                                if(xList.Count < Data.gridSize)
+                                if (xList.Count < Data.gridSize)
                                 {
                                     int xp = centerX + k;
                                     int xn = centerX - k;
@@ -2465,7 +2526,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                 }
                                 for (int y = 0; y < yList.Count; y++)
                                 {
-                                    if(finalX >= 0)
+                                    if (finalX >= 0)
                                     {
                                         break;
                                     }
@@ -2481,7 +2542,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                             finalY = -1;
                                             break;
                                         }
-                                        if(buildings[k].warX >= 0 && buildings[k].warY >= 0)
+                                        if (buildings[k].warX >= 0 && buildings[k].warY >= 0)
                                         {
                                             rect1 = new Rectangle(buildings[k].warX, buildings[k].warY, buildings[k].columns, buildings[k].rows);
                                             if (rect2.IntersectsWith(rect1))
@@ -2519,7 +2580,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             File.WriteAllText(path, "Obstacle placement was checked for " + count.ToString() + " players and " + placed.ToString() + " obstacles was placed.");
             return true;
         }
-        
+
         #endregion
 
         #region War Update
@@ -3009,7 +3070,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                 bool found = false;
                                 for (int k = 0; k < report.clan1.members.Count; k++)
                                 {
-                                    if(report.clan1.members[k].id == report.clan1.war.attacks[j].attacker)
+                                    if (report.clan1.members[k].id == report.clan1.war.attacks[j].attacker)
                                     {
                                         found = true;
                                         break;
@@ -3646,12 +3707,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                 }
                                 else
                                 {
-                                    Data.BuildingCount limits = Data.GetBuildingLimits(townHall.level, building.id);
-                                    int haveCount = GetBuildingCount(account_id, building.id, connection);
-                                    if (limits == null || haveCount >= limits.count)
-                                    {
-                                        limited = true;
-                                    }
+                                    //Data.BuildingCount limits = Data.GetBuildingLimits(townHall.level, building.id);
+                                    //int haveCount = GetBuildingCount(account_id, building.id, connection);
+                                    //if (limits == null || haveCount >= limits.count)
+                                    //{
+                                    //    limited = true;
+                                    //}
                                 }
                                 if (limited)
                                 {
@@ -3880,21 +3941,32 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 int reqElixir = 0;
                 int reqDarkElixir = 0;
                 int reqGems = 0;
-                string query = String.Format("SELECT req_gold, req_elixir, req_dark_elixir, req_gems, build_time FROM server_buildings WHERE global_id = '{0}' AND level = {1};", globalID, globalID == Data.BuildingID.obstacle.ToString() ? level : level + 1);
-                using (MySqlCommand command = new MySqlCommand(query, connection))
+
+                if (globalID == Data.BuildingID.obstacle.ToString() || globalID == Data.BuildingID.tree.ToString())
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    haveLevel = true;
+                    time = 10;
+                    reqElixir = 50;
+                    reqGold = 100;
+                }
+                else
+                {
+                    string query = String.Format("SELECT req_gold, req_elixir, req_dark_elixir, req_gems, build_time FROM server_buildings WHERE global_id = '{0}' AND level = {1};", globalID, level + 1);
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        if (reader.HasRows)
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            while (reader.Read())
+                            if (reader.HasRows)
                             {
-                                haveLevel = true;
-                                time = int.Parse(reader["build_time"].ToString());
-                                reqGold = int.Parse(reader["req_gold"].ToString());
-                                reqElixir = int.Parse(reader["req_elixir"].ToString());
-                                reqDarkElixir = int.Parse(reader["req_dark_elixir"].ToString());
-                                reqGems = int.Parse(reader["req_gems"].ToString());
+                                while (reader.Read())
+                                {
+                                    haveLevel = true;
+                                    time = int.Parse(reader["build_time"].ToString());
+                                    reqGold = int.Parse(reader["req_gold"].ToString());
+                                    reqElixir = int.Parse(reader["req_elixir"].ToString());
+                                    reqDarkElixir = int.Parse(reader["req_dark_elixir"].ToString());
+                                    reqGems = int.Parse(reader["req_gems"].ToString());
+                                }
                             }
                         }
                     }
@@ -3904,6 +3976,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 {
                     int buildersCount = GetBuildingCount(account_id, "buildershut", connection);
                     int constructingCount = GetBuildingConstructionCount(account_id, connection);
+
                     if (time > 0 && buildersCount <= constructingCount)
                     {
                         response = 5;
@@ -3911,32 +3984,34 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     else
                     {
                         bool limited = false;
-                        if(globalID != Data.BuildingID.obstacle.ToString())
-                        {
-                            Data.Building townHall = GetBuildingsByGlobalID("townhall", account_id, connection)[0];
-                            if (globalID == "townhall")
-                            {
 
-                            }
-                            else
-                            {
-                                Data.BuildingCount limits = Data.GetBuildingLimits(townHall.level, globalID);
-                                int haveCount = GetBuildingCount(account_id, globalID, connection);
-                                if (haveCount >= limits.count && level >= limits.maxLevel)
-                                {
-                                    limited = true;
-                                }
-                            }
-                        }
                         if (limited)
                         {
                             response = 6;
                         }
                         else
                         {
-                            if (SpendResources(connection, account_id, reqGold, reqElixir, reqGems, reqDarkElixir))
+                            bool resourcesOk = false;
+                            if (globalID == Data.BuildingID.obstacle.ToString() || globalID == Data.BuildingID.tree.ToString())
                             {
-                                query = String.Format("UPDATE buildings SET is_constructing = 1, construction_time =  NOW() + INTERVAL {0} SECOND, construction_build_time = {1} WHERE id = {2};", time, time, buildingID);
+                                if (CheckResources(connection, account_id, 0, reqElixir, 0, 0))
+                                {
+                                    SpendResources(connection, account_id, 0, reqElixir, 0, 0);
+                                    AddResources(connection, account_id, reqGold, 0, 0, 0);
+                                    resourcesOk = true;
+                                }
+                            }
+                            else
+                            {
+                                if (SpendResources(connection, account_id, reqGold, reqElixir, reqGems, reqDarkElixir))
+                                {
+                                    resourcesOk = true;
+                                }
+                            }
+
+                            if (resourcesOk)
+                            {
+                                string query = String.Format("UPDATE buildings SET is_constructing = 1, construction_time =  NOW() + INTERVAL {0} SECOND, construction_build_time = {1} WHERE id = {2};", time, time, buildingID);
                                 using (MySqlCommand command = new MySqlCommand(query, connection))
                                 {
                                     command.ExecuteNonQuery();
@@ -4612,7 +4687,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 if (opponentServer.buildings.Count == opponentClent.buildings.Count)
                 {
                     buildings = Data.BuildingsToBattleBuildings(opponentServer.buildings, type);
-                    if(buildings == null)
+                    if (buildings == null)
                     {
                         match = false;
                         buildings = new List<Battle.Building>();
@@ -4686,7 +4761,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             List<Data.BattleReportItem> reports = await GetBattlesListAsync(account_id);
             Packet packet = new Packet();
             packet.Write((int)Terminal.RequestsID.BATTLEREPORTS);
-            if(reports != null && reports.Count > 0)
+            if (reports != null && reports.Count > 0)
             {
                 packet.Write(1);
                 string data = await Data.SerializeAsync<List<Data.BattleReportItem>>(reports);
@@ -4760,7 +4835,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             Data.BattleReport report = await GetBattleReportAsync(account_id, report_id);
             Packet packet = new Packet();
             packet.Write((int)Terminal.RequestsID.BATTLEREPORT);
-            if(report == null)
+            if (report == null)
             {
                 packet.Write(0);
             }
@@ -7530,7 +7605,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             }
                         }
                     }
-                    if(reports_count >= max_chat_reports_allowed_per_day)
+                    if (reports_count >= max_chat_reports_allowed_per_day)
                     {
                         response = 2;
                     }
@@ -7581,7 +7656,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                             while (reader.Read())
                                             {
                                                 long clan = 0;
-                                                if(long.TryParse(reader["clan"].ToString(), out clan))
+                                                if (long.TryParse(reader["clan"].ToString(), out clan))
                                                 {
                                                     if (clan > 0)
                                                     {

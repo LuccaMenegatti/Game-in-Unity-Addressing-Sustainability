@@ -48,6 +48,7 @@ namespace DevelopersHub.ClashOfWhatecer
         public Sprite obsticle03Icon = null;
         public Sprite obsticle04Icon = null;
         public Sprite obsticle05Icon = null;
+        public Sprite treeIcon = null;
 
         [Header("Units")]
         public Sprite barbarianIcon = null;
@@ -167,6 +168,7 @@ namespace DevelopersHub.ClashOfWhatecer
                 case Data.BuildingID.spellfactory: return spellfacroryIcon;
                 case Data.BuildingID.darkspellfactory: return darkspellfacroryIcon;
                 case Data.BuildingID.laboratory: return labIcon;
+                case Data.BuildingID.tree: return treeIcon;
             }
             return null;
         }

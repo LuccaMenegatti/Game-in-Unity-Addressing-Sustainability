@@ -32833,7 +32833,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 50dd5d693297eba42a52da3d29d4fd77, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8807cb47ec707e94a863bc2cda568b9e, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -36437,6 +36437,7 @@ MonoBehaviour:
   - {fileID: 6504443922918281735, guid: 1a0585ee66d76f74386a51313ea05822, type: 3}
   - {fileID: 5700603081937000555, guid: 4be02376a6a7fc04a9c63db6db8f2ad6, type: 3}
   - {fileID: 3968704366912990263, guid: 5431225c37b56c646b67c82d1171545f, type: 3}
+  - {fileID: 6015138467682934264, guid: cef740a4764b7e64c9d69b74a1d35148, type: 3}
   buttonsParent: {fileID: 1277747620}
   buttonCollectGold: {fileID: 8163675640045361892, guid: deebe2df542bafb47a82b9cafdd7ee43, type: 3}
   buttonCollectElixir: {fileID: 8203149641647971460, guid: a7532cdc7f869b6448fc02ac1da84c0b, type: 3}
@@ -43698,7 +43699,7 @@ MonoBehaviour:
   _buildingsGrid: {fileID: 631138844}
   _goldText: {fileID: 504951803}
   _buildingPrefab: {fileID: 985200995247123402, guid: 3efb06f58ae19bb4a8d0af538ba54121, type: 3}
-  _buildingsAvailable: 01000000030000000200000008000000040000002000000022000000
+  _buildingsAvailable: 2600000001000000030000000200000008000000040000002000000022000000
 --- !u!1 &1461142955
 GameObject:
   m_ObjectHideFlags: 0
@@ -49303,7 +49304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldIcon: {fileID: 21300000, guid: 23947f9bbfb056947bf7177ca5b87f44, type: 3}
-  elixirIcon: {fileID: 21300000, guid: 50dd5d693297eba42a52da3d29d4fd77, type: 3}
+  elixirIcon: {fileID: 21300000, guid: 8807cb47ec707e94a863bc2cda568b9e, type: 3}
   darkIcon: {fileID: 21300000, guid: 0e59b16fedaa17f47bf912e8f4b590d4, type: 3}
   gemsIcon: {fileID: 21300000, guid: a7a70ad37959b3e4f9ade073aa255348, type: 3}
   townhallIcon: {fileID: 21300000, guid: 63ea8e61d7299da42b1bd1be4edff934, type: 3}
@@ -49350,6 +49351,7 @@ MonoBehaviour:
   obsticle03Icon: {fileID: 21300000, guid: e4cbe6a62f0966d4bb4613cc51434f23, type: 3}
   obsticle04Icon: {fileID: 21300000, guid: 5174d9e6538b21d4ca0b34a5d4fea384, type: 3}
   obsticle05Icon: {fileID: 21300000, guid: 9077ffaa66982ca45a0c6a9efde45627, type: 3}
+  treeIcon: {fileID: 21300000, guid: e4cbe6a62f0966d4bb4613cc51434f23, type: 3}
   barbarianIcon: {fileID: 21300000, guid: 33450e7f192e69a4a91e495618be5afe, type: 3}
   archerIcon: {fileID: 21300000, guid: 3f99971da98e7434b94a38da4714d42d, type: 3}
   goblinIcon: {fileID: 21300000, guid: 3f99971da98e7434b94a38da4714d42d, type: 3}
@@ -55052,7 +55054,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Remove
+  m_text: Remover
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
   m_sharedMaterial: {fileID: -1847478308233949354, guid: 7ff29254fab86ba43a4a76d2e27f2902, type: 2}
@@ -55125,7 +55127,7 @@ MonoBehaviour:
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
   preserveNumbers: 0
   farsi: 1
-  originalText: Remove
+  originalText: 'Remover '
   fixTags: 1
   forceFix: 0
 --- !u!114 &1832247739

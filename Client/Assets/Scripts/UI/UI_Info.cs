@@ -72,12 +72,34 @@
                         case Data.BuildingID.laboratory: // Eco-Centro
                             _descriptionText.text = "Um laboratório para salvar o planeta! O Eco-Centro é onde novas ideias e tecnologias verdes são criadas, como jeitos melhores de reciclar e de limpar a natureza.\n\nConstruir um garante 400 Pontos Sustentáveis.";
                             break;
+                        case Data.BuildingID.tree: // Árvore
+                            _descriptionText.text = 
+                                "Um símbolo de vida e responsabilidade ecológica. Cuidar do planeta faz parte da sua jornada!\n\n" +
+                                "Ao Plantar: Você gasta Ouro, e ganha 50 Pontos Sustentáveis.\n\n" +
+                                "Ao Remover: Você ganha 100 Ouro, mas gasta 50 Pontos Sustentáveis.\n\n" +
+                                "Se organize para pontuar mais! O equilíbrio é a chave.";
+                            break;
                         case Data.BuildingID.obstacle:
                             switch (level)
                             {
-                                case 1: _descriptionText.text = ""; break;
-                                case 2: _descriptionText.text = ""; break;
-                                case 3: _descriptionText.text = ""; break;
+                                case 1: _descriptionText.text =
+                                        "Um símbolo de vida e responsabilidade ecológica. Cuidar do planeta faz parte da sua jornada!\n\n" +
+                                        "Ao Plantar: Você gasta Ouro, e ganha 50 Pontos Sustentáveis.\n\n" +
+                                        "Ao Remover: Você ganha 100 Ouro, mas gasta 50 Pontos Sustentáveis.\n\n" +
+                                        "Se organize para pontuar mais! O equilíbrio é a chave.";
+                                    break;
+                                case 2: _descriptionText.text =
+                                        "Um símbolo de vida e responsabilidade ecológica. Cuidar do planeta faz parte da sua jornada!\n\n" +
+                                        "Ao Plantar: Você gasta Ouro, e ganha 50 Pontos Sustentáveis.\n\n" +
+                                        "Ao Remover: Você ganha 100 Ouro, mas gasta 50 Pontos Sustentáveis.\n\n" +
+                                        "Se organize para pontuar mais! O equilíbrio é a chave.";
+                                    break;
+                                case 3: _descriptionText.text =
+                                        "Um símbolo de vida e responsabilidade ecológica. Cuidar do planeta faz parte da sua jornada!\n\n" +
+                                        "Ao Plantar: Você gasta Ouro, e ganha 50 Pontos Sustentáveis.\n\n" +
+                                        "Ao Remover: Você ganha 100 Ouro, mas gasta 50 Pontos Sustentáveis.\n\n" +
+                                        "Se organize para pontuar mais! O equilíbrio é a chave.";
+                                    break;
                                 case 4: _descriptionText.text = ""; break;
                                 case 5: _descriptionText.text = ""; break;
                             }

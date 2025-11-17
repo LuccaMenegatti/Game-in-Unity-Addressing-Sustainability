@@ -1,7 +1,5 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
@@ -47,134 +45,48 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public void SetStatus(bool status)
         {
-            if(status && Building.selectedInstanse != null)
+            if (status && Building.selectedInstanse != null)
             {
-                bool isChainging = Building.selectedInstanse.lastChange >= Player.instanse.lastUpdateSent;
-                int instantGemCost = 0;
+                Data.BuildingID selectedID = Building.selectedInstanse.id;
+                bool isConstructing = Building.selectedInstanse.data.isConstructing;
+
                 infoPanel.gameObject.SetActive(UI_Main.instanse.isActive);
-                upgradePanel.gameObject.SetActive(!isChainging && Building.selectedInstanse.data.isConstructing == false && UI_Main.instanse.isActive && Building.selectedInstanse.data.id != Data.BuildingID.buildershut && Building.selectedInstanse.data.id != Data.BuildingID.obstacle);
-                if (Building.selectedInstanse.data.isConstructing)
+
+                if ((selectedID == Data.BuildingID.obstacle || selectedID == Data.BuildingID.tree) && UI_Main.instanse.isActive && !isConstructing)
                 {
-                    instantGemCost = Data.GetInstantBuildRequiredGems((int)(Building.selectedInstanse.data.constructionTime - Player.instanse.data.nowTime).TotalSeconds);
-                    instantCost.text = instantGemCost.ToString();
-                    if(instantGemCost > Player.instanse.data.gems)
+                    removePanel.gameObject.SetActive(true);
+
+                    int removeCostAmount = 50;
+                    removeCostIcon.sprite = AssetsBank.instanse.elixirIcon;
+                    removeCost.text = removeCostAmount.ToString();
+
+                    if (Player.instanse.elixir >= removeCostAmount)
                     {
-                        instantCost.color = Color.red;
+                        removeCost.color = Color.white;
+                        canDo = true;
                     }
                     else
                     {
-                        instantCost.color = Color.white;
+                        removeCost.color = Color.red;
+                        canDo = false;
                     }
-                    instantCost.ForceMeshUpdate(true);
-                }
-                instantPanel.gameObject.SetActive(!isChainging && Building.selectedInstanse.data.isConstructing == true && UI_Main.instanse.isActive && instantGemCost > 0);
-                if (Building.selectedInstanse.data.id == Data.BuildingID.obstacle && UI_Main.instanse.isActive && Building.selectedInstanse.data.level > 0 && Building.selectedInstanse.data.isConstructing == false)
-                {
-                    canDo = true;
-                    int index = -1;
-                    for (int i = 0; i < Player.instanse.initializationData.serverBuildings.Count; i++)
-                    {
-                        if(Player.instanse.initializationData.serverBuildings[i].id != Data.BuildingID.obstacle.ToString() || Player.instanse.initializationData.serverBuildings[i].level != Building.selectedInstanse.data.level)
-                        {
-                            continue;
-                        }
-                        index = i;
-                        break;
-                    }
-                    if(index >= 0)
-                    {
-                        if(Player.instanse.initializationData.serverBuildings[index].requiredGold > 0)
-                        {
-                            removeCostIcon.sprite = AssetsBank.instanse.goldIcon;
-                            removeCost.text = Player.instanse.initializationData.serverBuildings[index].requiredGold.ToString();
-                            if(Player.instanse.gold >= Player.instanse.initializationData.serverBuildings[index].requiredGold)
-                            {
-                                removeCost.color = Color.white;
-                            }
-                            else
-                            {
-                                canDo = false;
-                                removeCost.color = Color.red;
-                            }
-                        }
-                        else if (Player.instanse.initializationData.serverBuildings[index].requiredElixir > 0)
-                        {
-                            removeCostIcon.sprite = AssetsBank.instanse.elixirIcon;
-                            removeCost.text = Player.instanse.initializationData.serverBuildings[index].requiredElixir.ToString();
-                            if (Player.instanse.elixir >= Player.instanse.initializationData.serverBuildings[index].requiredElixir)
-                            {
-                                removeCost.color = Color.white;
-                            }
-                            else
-                            {
-                                canDo = false;
-                                removeCost.color = Color.red;
-                            }
-                        }
-                        else if (Player.instanse.initializationData.serverBuildings[index].requiredDarkElixir > 0)
-                        {
-                            removeCostIcon.sprite = AssetsBank.instanse.darkIcon;
-                            removeCost.text = Player.instanse.initializationData.serverBuildings[index].requiredDarkElixir.ToString();
-                            if (Player.instanse.darkElixir >= Player.instanse.initializationData.serverBuildings[index].requiredDarkElixir)
-                            {
-                                removeCost.color = Color.white;
-                            }
-                            else
-                            {
-                                canDo = false;
-                                removeCost.color = Color.red;
-                            }
-                        }
-                        else
-                        {
-                            removeCostIcon.sprite = AssetsBank.instanse.gemsIcon;
-                            removeCost.text = Player.instanse.initializationData.serverBuildings[index].requiredGems.ToString();
-                            if (Player.instanse.data.gems >= Player.instanse.initializationData.serverBuildings[index].requiredGems)
-                            {
-                                removeCost.color = Color.white;
-                            }
-                            else
-                            {
-                                canDo = false;
-                                removeCost.color = Color.red;
-                            }
-                        }
-                    }
-                    removePanel.gameObject.SetActive(true);
                     removeCost.ForceMeshUpdate(true);
                 }
                 else
                 {
                     removePanel.gameObject.SetActive(false);
                 }
-                if ((Building.selectedInstanse.data.id == Data.BuildingID.goldmine || Building.selectedInstanse.data.id == Data.BuildingID.elixirmine || Building.selectedInstanse.data.id == Data.BuildingID.darkelixirmine) && Building.selectedInstanse.data.level > 0)
-                {
-                    canDo = true;
-                    int cost = Data.GetBoostResourcesCost(Building.selectedInstanse.data.id, Building.selectedInstanse.data.level);
-                    boostCost.text = cost.ToString();
-                    if (Player.instanse.data.gems >= cost)
-                    {
-                        boostCost.color = Color.white;
-                    }
-                    else
-                    {
-                        canDo = false;
-                        boostCost.color = Color.red;
-                    }
-                    boostPanel.gameObject.SetActive(Building.selectedInstanse.data.boost < Player.instanse.data.nowTime);
-                    boostCost.ForceMeshUpdate(true);
-                }
-                else
-                {
-                    boostPanel.gameObject.SetActive(false);
-                }
-                trainPanel.gameObject.SetActive(!isChainging && (Building.selectedInstanse.data.id == Data.BuildingID.armycamp || Building.selectedInstanse.data.id == Data.BuildingID.barracks) && UI_Main.instanse.isActive && Building.selectedInstanse.data.level > 0);
-                clanPanel.gameObject.SetActive(Building.selectedInstanse.data.id == Data.BuildingID.clancastle && UI_Main.instanse.isActive && Building.selectedInstanse.data.level > 0);
-                spellPanel.gameObject.SetActive(Building.selectedInstanse.data.id == Data.BuildingID.spellfactory && UI_Main.instanse.isActive && Building.selectedInstanse.data.level > 0);
-                researchPanel.gameObject.SetActive(Building.selectedInstanse.data.id == Data.BuildingID.laboratory && UI_Main.instanse.isActive && Building.selectedInstanse.data.level > 0);
+
+                upgradePanel.gameObject.SetActive(false);
+                instantPanel.gameObject.SetActive(false);
+                trainPanel.gameObject.SetActive(false);
+                clanPanel.gameObject.SetActive(false);
+                spellPanel.gameObject.SetActive(false);
+                researchPanel.gameObject.SetActive(false);
+                boostPanel.gameObject.SetActive(false);
             }
+
             _elements.SetActive(status);
         }
-
     }
 }

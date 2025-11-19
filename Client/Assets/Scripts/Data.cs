@@ -18,7 +18,7 @@
         public const int minDarkElixirCollect = 10;
         public static readonly int battleDuration = 120;
         public static readonly int battlePrepDuration = 30;
-        public static readonly int gridSize = 45;
+        public static readonly int gridSize = 23;
         public static readonly float gridCellSize = 1;
 
         public static readonly float battleFrameRate = 0.05f;
@@ -1127,7 +1127,7 @@
                     new BuildingCount { id = "seekingairmine", count = 8, maxLevel = 4},
                     new BuildingCount { id = "skeletontrap", count = 4, maxLevel = 4},
                     new BuildingCount { id = "tornadotrap", count = 1, maxLevel = 3},
-                    new BuildingCount { id = "tree", count = 10, maxLevel = 1},
+                    new BuildingCount { id = "tree", count = 40, maxLevel = 1},
                 }
             },
             new BuildingAvailability

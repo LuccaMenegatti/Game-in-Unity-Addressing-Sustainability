@@ -75,7 +75,7 @@ namespace DevelopersHub.ClashOfWhatecer
             _moving = false;
             _pivot.SetParent(_root);
             _target.SetParent(_pivot);
-            _root.position = new Vector3(UI_Main.instanse._grid.transform.position.x, UI_Main.instanse._grid.down + ((UI_Main.instanse._grid.up - UI_Main.instanse._grid.down) / 2f), UI_Main.instanse._grid.transform.position.z);
+            _root.position = new Vector3(-0.12f, 9, 0);
             _root.eulerAngles = new Vector3(0, 0, 0);
             _pivot.localPosition = Vector3.zero;
             _pivot.localEulerAngles = Vector3.zero;

@@ -1,13 +1,15 @@
-﻿using System;
+﻿using AStarPathfinding;
 using MySql.Data.MySqlClient;
-using System.Data;
-using System.Threading.Tasks;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Numerics;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace DevelopersHub.RealtimeNetworking.Server
 {
@@ -262,51 +264,83 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         command.ExecuteNonQuery();
                         initializationData.accountID = command.LastInsertedId;
                     }
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.townhall.ToString(), initializationData.accountID, 25, 25, 25, 25);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.goldmine.ToString(), initializationData.accountID, 27, 21, 27, 21);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.goldstorage.ToString(), initializationData.accountID, 30, 28, 30, 28);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.elixirmine.ToString(), initializationData.accountID, 21, 27, 21, 27);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.elixirstorage.ToString(), initializationData.accountID, 25, 30, 25, 30);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.buildershut.ToString(), initializationData.accountID, 22, 24, 22, 24);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    List<int> xl = new List<int> { 19, 24, 32, 32, 34, 30, 26, 17, 8, 3, 2, 5, 16, 26, 35, 40 };
-                    List<int> yl = new List<int> { 20, 15, 16, 24, 30, 33, 35, 37, 32, 39, 10, 4, 1, 3, 1, 5 };
+
+                    int thX = 10; int thY = 10;
+                    int gsX = 16; int gsY = 10;
+                    int esX = 5; int esY = 10;
+                    int bhX = 11; int bhY = 6;
+
+                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});",
+                        Data.BuildingID.townhall.ToString(), initializationData.accountID, thX, thY, thX, thY);
+                    using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
+
+                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});",
+                        Data.BuildingID.goldstorage.ToString(), initializationData.accountID, gsX, gsY, gsX, gsY);
+                    using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
+
+                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});",
+                        Data.BuildingID.elixirstorage.ToString(), initializationData.accountID, esX, esY, esX, esY);
+                    using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
+
+                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});",
+                        Data.BuildingID.buildershut.ToString(), initializationData.accountID, bhX, bhY, bhX, bhY);
+                    using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
+
+
+                    List<Vector2Int> occupiedPositions = new List<Vector2Int>();
+
+                    occupiedPositions.Add(new Vector2Int(thX, thY));
+                    occupiedPositions.Add(new Vector2Int(gsX, gsY));
+                    occupiedPositions.Add(new Vector2Int(esX, esY));
+                    occupiedPositions.Add(new Vector2Int(bhX, bhY));
+
                     Random rnd = new Random();
-                    for (int i = 1; i <= 5; i++)
+                    int treesCreated = 0;
+                    int maxAttempts = 300;
+                    int attempts = 0;
+
+                    while (treesCreated < 28 && attempts < maxAttempts)
                     {
-                        int index = rnd.Next(0, xl.Count);
-                        int level = rnd.Next(1, 6);
-                        query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, {6}, NOW() - INTERVAL 1 HOUR, {4}, {5});", Data.BuildingID.obstacle.ToString(), initializationData.accountID, xl[index], yl[index], xl[index], yl[index], level);
+                        attempts++;
+
+                        int rx = rnd.Next(1, 22);
+                        int ry = rnd.Next(1, 22);
+
+                        Vector2Int newPos = new Vector2Int(rx, ry);
+                        bool positionIsBad = false;
+
+                        if (Math.Sqrt(Math.Pow(rx - thX, 2) + Math.Pow(ry - thY, 2)) < 3.5) positionIsBad = true;
+                        if (Math.Sqrt(Math.Pow(rx - gsX, 2) + Math.Pow(ry - gsY, 2)) < 2.5) positionIsBad = true;
+                        if (Math.Sqrt(Math.Pow(rx - esX, 2) + Math.Pow(ry - esY, 2)) < 2.5) positionIsBad = true;
+                        if (Math.Sqrt(Math.Pow(rx - bhX, 2) + Math.Pow(ry - bhY, 2)) < 2.0) positionIsBad = true;
+
+                        if (!positionIsBad)
+                        {
+                            foreach (var occupied in occupiedPositions)
+                            {
+                                if (Math.Sqrt(Math.Pow(rx - occupied.X, 2) + Math.Pow(ry - occupied.Y, 2)) < 2.0)
+                                {
+                                    positionIsBad = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (positionIsBad) continue;
+
+                        occupiedPositions.Add(newPos);
+
+                        query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});",
+                            Data.BuildingID.tree.ToString(), initializationData.accountID, rx, ry, rx, ry);
+
                         using (MySqlCommand command = new MySqlCommand(query, connection))
                         {
                             command.ExecuteNonQuery();
                         }
-                        xl.RemoveAt(index);
-                        yl.RemoveAt(index);
+
+                        treesCreated++;
                     }
+
                     AddResources(connection, initializationData.accountID, 1000, 0, 0, 250);
                 }
                 query = String.Format("UPDATE accounts SET is_online = 1, client_id = {0}, last_login = NOW() WHERE id = {1}", id, initializationData.accountID);

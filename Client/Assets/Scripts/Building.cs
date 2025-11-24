@@ -774,7 +774,8 @@ namespace DevelopersHub.ClashOfWhatecer
                 packet.Write((int)Player.RequestsID.REPLACE);
                 packet.Write(selectedInstanse.databaseID);
                 packet.Write(selectedInstanse.currentX);
-                packet.Write(selectedInstanse.currentY);               
+                packet.Write(selectedInstanse.currentY);
+                packet.Write(Player.instanse.data.layout);
                 Sender.TCP_Send(packet);
                 if (_baseArea)
                 {

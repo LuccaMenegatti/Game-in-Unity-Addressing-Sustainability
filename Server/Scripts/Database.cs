@@ -282,17 +282,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         Data.BuildingID.elixirstorage.ToString(), initializationData.accountID, esX, esY, esX, esY);
                     using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
 
-                    query = String.Format("INSERT INTO buildings (global_id, account_id, x_position, y_position, level, track_time, x_war, y_war) VALUES('{0}', {1}, {2}, {3}, 1, NOW() - INTERVAL 1 HOUR, {4}, {5});",
-                        Data.BuildingID.buildershut.ToString(), initializationData.accountID, bhX, bhY, bhX, bhY);
-                    using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
-
-
+                   
                     List<Vector2Int> occupiedPositions = new List<Vector2Int>();
 
                     occupiedPositions.Add(new Vector2Int(thX, thY));
                     occupiedPositions.Add(new Vector2Int(gsX, gsY));
                     occupiedPositions.Add(new Vector2Int(esX, esY));
-                    occupiedPositions.Add(new Vector2Int(bhX, bhY));
 
                     Random rnd = new Random();
                     int treesCreated = 0;
@@ -312,7 +307,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         if (Math.Sqrt(Math.Pow(rx - thX, 2) + Math.Pow(ry - thY, 2)) < 3.5) positionIsBad = true;
                         if (Math.Sqrt(Math.Pow(rx - gsX, 2) + Math.Pow(ry - gsY, 2)) < 2.5) positionIsBad = true;
                         if (Math.Sqrt(Math.Pow(rx - esX, 2) + Math.Pow(ry - esY, 2)) < 2.5) positionIsBad = true;
-                        if (Math.Sqrt(Math.Pow(rx - bhX, 2) + Math.Pow(ry - bhY, 2)) < 2.0) positionIsBad = true;
 
                         if (!positionIsBad)
                         {
@@ -1090,7 +1084,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             switch (buildings[i].id)
                             {
                                 case Data.BuildingID.townhall:
-                                    if (spendGold < gold)
+                                    if (spendGold < gold && buildings[i].goldStorage > 0)
                                     {
                                         if (buildings[i].goldStorage >= (gold - spendGold))
                                         {
@@ -1102,7 +1096,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                         }
                                         spendGold += toSpendGold;
                                     }
-                                    if (spendElixir < elixir)
+                                    if (spendElixir < elixir && buildings[i].elixirStorage > 0)
                                     {
                                         if (buildings[i].elixirStorage >= (elixir - spendElixir))
                                         {
@@ -1114,7 +1108,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                         }
                                         spendElixir += toSpendElixir;
                                     }
-                                    if (spendDarkElixir < darkElixir)
+                                    if (spendDarkElixir < darkElixir && buildings[i].darkStorage > 0)
                                     {
                                         if (buildings[i].darkStorage >= (darkElixir - spendDarkElixir))
                                         {
@@ -1128,7 +1122,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                     }
                                     break;
                                 case Data.BuildingID.goldstorage:
-                                    if (spendGold < gold)
+                                    if (spendGold < gold && buildings[i].goldStorage > 0)
                                     {
                                         if (buildings[i].goldStorage >= (gold - spendGold))
                                         {
@@ -1142,7 +1136,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                     }
                                     break;
                                 case Data.BuildingID.elixirstorage:
-                                    if (spendElixir < elixir)
+                                    if (spendElixir < elixir && buildings[i].elixirStorage > 0)
                                     {
                                         if (buildings[i].elixirStorage >= (elixir - spendElixir))
                                         {
@@ -1156,7 +1150,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                     }
                                     break;
                                 case Data.BuildingID.darkelixirstorage:
-                                    if (spendDarkElixir < darkElixir)
+                                    if (spendDarkElixir < darkElixir && buildings[i].darkStorage > 0)
                                     {
                                         if (buildings[i].darkStorage >= (darkElixir - spendDarkElixir))
                                         {
@@ -1246,7 +1240,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         }
                     }
                 }
-                if (haveGold < gold || haveElixir < elixir || haveDarkElixir < darkElixir)
+                bool missingGold = (gold > 0 && haveGold < gold);
+                bool missingElixir = (elixir > 0 && haveElixir < elixir);
+                bool missingDark = (darkElixir > 0 && haveDarkElixir < darkElixir);
+
+                if (missingGold || missingElixir || missingDark)
                 {
                     return false;
                 }
@@ -1286,7 +1284,9 @@ namespace DevelopersHub.RealtimeNetworking.Server
             if (gold > 0 || elixir > 0 || darkElixir > 0)
             {
                 List<Data.Building> storages = new List<Data.Building>();
-                string query = String.Format("SELECT buildings.id, buildings.global_id, buildings.gold_storage, buildings.elixir_storage, buildings.dark_elixir_storage, server_buildings.gold_capacity, server_buildings.elixir_capacity, server_buildings.dark_elixir_capacity FROM buildings LEFT JOIN server_buildings ON buildings.global_id = server_buildings.global_id AND buildings.level = server_buildings.level WHERE buildings.account_id = {0} AND buildings.global_id IN('{1}', '{2}', '{3}', '{4}') AND buildings.level > 0;", account_id, Data.BuildingID.townhall.ToString(), Data.BuildingID.goldstorage.ToString(), Data.BuildingID.elixirstorage.ToString(), Data.BuildingID.darkelixirstorage.ToString());
+
+                string query = String.Format("SELECT buildings.id, buildings.global_id, buildings.gold_storage, buildings.elixir_storage, buildings.dark_elixir_storage, server_buildings.gold_capacity, server_buildings.elixir_capacity, server_buildings.dark_elixir_capacity FROM buildings LEFT JOIN server_buildings ON buildings.global_id = server_buildings.global_id AND buildings.level = server_buildings.level WHERE buildings.account_id = {0} AND buildings.global_id IN('townhall', 'goldstorage', 'elixirstorage', 'darkelixirstorage') AND buildings.level > 0;", account_id);
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -1296,14 +1296,33 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             while (reader.Read())
                             {
                                 Data.Building building = new Data.Building();
-                                building.databaseID = long.Parse(reader["id"].ToString());
-                                building.id = (Data.BuildingID)Enum.Parse(typeof(Data.BuildingID), reader["global_id"].ToString());
-                                building.goldStorage = (int)Math.Floor(float.Parse(reader["gold_storage"].ToString()));
-                                building.elixirStorage = (int)Math.Floor(float.Parse(reader["elixir_storage"].ToString()));
-                                building.darkStorage = (int)Math.Floor(float.Parse(reader["dark_elixir_storage"].ToString()));
-                                building.goldCapacity = int.Parse(reader["gold_capacity"].ToString());
-                                building.elixirCapacity = int.Parse(reader["elixir_capacity"].ToString());
-                                building.darkCapacity = int.Parse(reader["dark_elixir_capacity"].ToString());
+                                long.TryParse(reader["id"].ToString(), out building.databaseID);
+
+                                if (Enum.TryParse(typeof(Data.BuildingID), reader["global_id"].ToString(), out object parsedId))
+                                {
+                                    building.id = (Data.BuildingID)parsedId;
+                                }
+
+                                float tempVal = 0;
+                                float.TryParse(reader["gold_storage"].ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tempVal);
+                                building.goldStorage = (int)Math.Floor(tempVal);
+
+                                float.TryParse(reader["elixir_storage"].ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tempVal);
+                                building.elixirStorage = (int)Math.Floor(tempVal);
+
+                                float.TryParse(reader["dark_elixir_storage"].ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tempVal);
+                                building.darkStorage = (int)Math.Floor(tempVal);
+
+                                int cap = 0;
+                                int.TryParse(reader["gold_capacity"].ToString(), out cap);
+                                building.goldCapacity = cap;
+
+                                int.TryParse(reader["elixir_capacity"].ToString(), out cap);
+                                building.elixirCapacity = cap;
+
+                                int.TryParse(reader["dark_elixir_capacity"].ToString(), out cap);
+                                building.darkCapacity = cap;
+
                                 storages.Add(building);
                             }
                         }
@@ -1315,16 +1334,18 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     int remainedGold = gold;
                     int remainedElixir = elixir;
                     int remainedDatk = darkElixir;
+
                     for (int i = 0; i < storages.Count; i++)
                     {
-                        if (remainedGold <= 0 && remainedElixir <= 0 && remainedDatk <= 0)
-                        {
-                            break;
-                        }
+                        if (remainedGold <= 0 && remainedElixir <= 0 && remainedDatk <= 0) break;
 
                         int goldSpace = storages[i].goldCapacity - storages[i].goldStorage;
                         int elixirSpace = storages[i].elixirCapacity - storages[i].elixirStorage;
                         int darkSpace = storages[i].darkCapacity - storages[i].darkStorage;
+
+                        if (goldSpace < 0) goldSpace = 0;
+                        if (elixirSpace < 0) elixirSpace = 0;
+                        if (darkSpace < 0) darkSpace = 0;
 
                         int addGold = 0;
                         int addElixir = 0;
@@ -3725,7 +3746,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         }
                         if (haveBuilding)
                         {
-                            int buildersCount = GetBuildingCount(account_id, "buildershut", connection);
+                            int buildersCount = 100;
                             int constructingCount = GetBuildingConstructionCount(account_id, connection);
                             if (time > 0 && buildersCount <= constructingCount)
                             {
@@ -3976,10 +3997,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 int reqDarkElixir = 0;
                 int reqGems = 0;
 
-                if (globalID == Data.BuildingID.obstacle.ToString() || globalID == Data.BuildingID.tree.ToString())
+                bool isTreeOrObstacle = (globalID == Data.BuildingID.obstacle.ToString() || globalID == Data.BuildingID.tree.ToString());
+
+                if (isTreeOrObstacle)
                 {
                     haveLevel = true;
-                    time = 10;
+                    time = 0;
                     reqElixir = 50;
                     reqGold = 100;
                 }
@@ -4008,17 +4031,16 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
                 if (haveLevel)
                 {
-                    int buildersCount = GetBuildingCount(account_id, "buildershut", connection);
+                    int buildersCount = 100;
                     int constructingCount = GetBuildingConstructionCount(account_id, connection);
-
+                  
                     if (time > 0 && buildersCount <= constructingCount)
                     {
                         response = 5;
                     }
                     else
                     {
-                        bool limited = false;
-
+                        bool limited = false; 
                         if (limited)
                         {
                             response = 6;
@@ -4026,11 +4048,26 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         else
                         {
                             bool resourcesOk = false;
-                            if (globalID == Data.BuildingID.obstacle.ToString() || globalID == Data.BuildingID.tree.ToString())
-                            {
-                                if (CheckResources(connection, account_id, 0, reqElixir, 0, 0))
+
+                            if (isTreeOrObstacle)
+                            {        
+                                long townHallId = 0;
+                                string thQuery = String.Format("SELECT id FROM buildings WHERE account_id = {0} AND global_id = '{1}';", account_id, Data.BuildingID.townhall.ToString());
+
+                                using (MySqlCommand cmdGet = new MySqlCommand(thQuery, connection))
                                 {
-                                    SpendResources(connection, account_id, 0, reqElixir, 0, 0);
+                                    var result = cmdGet.ExecuteScalar();
+                                    if (result != null) long.TryParse(result.ToString(), out townHallId);
+                                }
+
+                                if (townHallId > 0)
+                                {
+                                    string updateQuery = String.Format("UPDATE buildings SET elixir_storage = elixir_storage - {0} WHERE id = {1};", reqElixir, townHallId);
+                                    using (MySqlCommand cmdUpdate = new MySqlCommand(updateQuery, connection))
+                                    {
+                                        cmdUpdate.ExecuteNonQuery();
+                                    }
+
                                     AddResources(connection, account_id, reqGold, 0, 0, 0);
                                     resourcesOk = true;
                                 }
@@ -4045,11 +4082,25 @@ namespace DevelopersHub.RealtimeNetworking.Server
 
                             if (resourcesOk)
                             {
-                                string query = String.Format("UPDATE buildings SET is_constructing = 1, construction_time =  NOW() + INTERVAL {0} SECOND, construction_build_time = {1} WHERE id = {2};", time, time, buildingID);
-                                using (MySqlCommand command = new MySqlCommand(query, connection))
+                                if (isTreeOrObstacle)
                                 {
-                                    command.ExecuteNonQuery();
-                                    response = 1;
+                                    string query = String.Format("DELETE FROM buildings WHERE id = {0} AND (global_id = '{1}' OR global_id = '{2}');",
+                                        buildingID, Data.BuildingID.obstacle.ToString(), Data.BuildingID.tree.ToString());
+
+                                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                                    {
+                                        command.ExecuteNonQuery();
+                                        response = 1;
+                                    }
+                                }
+                                else
+                                {
+                                    string query = String.Format("UPDATE buildings SET is_constructing = 1, construction_time = NOW() + INTERVAL {0} SECOND, construction_build_time = {1} WHERE id = {2};", time, time, buildingID);
+                                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                                    {
+                                        command.ExecuteNonQuery();
+                                        response = 1;
+                                    }
                                 }
                             }
                             else
@@ -4061,7 +4112,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 }
                 else
                 {
-                    response = 3;
+                    response = 3; 
                 }
                 connection.Close();
             }

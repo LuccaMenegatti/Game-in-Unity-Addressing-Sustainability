@@ -135,11 +135,19 @@ namespace DevelopersHub.ClashOfWhatecer
         {
             if (Building.buildInstanse.serverIndex >= 0)
             {
-                if(Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGems > Player.instanse.data.gems || Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredElixir > Player.instanse.elixir || Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredDarkElixir > Player.instanse.darkElixir || Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex].requiredGold > Player.instanse.gold)
+                var sb = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex];
+                var pData = Player.instanse;
+                bool missingGems = (sb.requiredGems > 0 && sb.requiredGems > pData.data.gems);
+                bool missingElixir = (sb.requiredElixir > 0 && sb.requiredElixir > pData.elixir); 
+                bool missingDark = (sb.requiredDarkElixir > 0 && sb.requiredDarkElixir > pData.darkElixir);
+                bool missingGold = (sb.requiredGold > 0 && sb.requiredGold > pData.gold);
+
+                if (missingGems || missingElixir || missingDark || missingGold)
                 {
                     return false;
                 }
             }
+
             int townHallLevel = 1;
             int count = 0;
             for (int i = 0; i < Player.instanse.data.buildings.Count; i++)

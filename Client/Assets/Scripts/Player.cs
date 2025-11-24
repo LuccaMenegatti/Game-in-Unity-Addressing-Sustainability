@@ -706,13 +706,10 @@
         public void SyncData(Data.Player player)
         {
             data = player;
-
             _gold = 0;
             _maxGold = 0;
-
             _elixir = 0;
             _maxElixir = 0;
-
             _darkElixir = 0;
             _maxDarkElixir = 0;
 
@@ -759,22 +756,16 @@
                 }
             }
 
-            /*
-            for (int i = 0; i < player.units.Count; i++)
-            {
-
-            }
-            */
-            _gold = Mathf.Clamp(_gold, 0, _maxGold);
-            _elixir = Mathf.Clamp(_elixir, 0, _maxElixir);
-            _darkElixir = Mathf.Clamp(_darkElixir, 0, _maxDarkElixir);
+            if (_gold > _maxGold) _gold = _maxGold;
+            if (_elixir > _maxElixir) _elixir = _maxElixir;
+            if (_darkElixir > _maxDarkElixir) _darkElixir = _maxDarkElixir;
 
             UpdateResourcesUI();
 
             UI_Main.instanse._usernameText.text = Data.DecodeString(data.name);
             UI_Main.instanse._levelText.text = data.level.ToString();
             UI_Main.instanse._xpText.text = data.xp.ToString();
-            
+
             int reqXp = Data.GetNexLevelRequiredXp(data.level);
             UI_Main.instanse._xpBar.fillAmount = (reqXp > 0 ? ((float)data.xp / (float)reqXp) : 0);
 
@@ -790,12 +781,14 @@
                         _darkElixir -= UI_Main.instanse._grid.unidentifiedBuildings[i].placeDarkElixirCost;
                         data.gems -= UI_Main.instanse._grid.unidentifiedBuildings[i].placeGemCost;
                     }
-                    _gold = Mathf.Clamp(_gold, 0, _maxGold);
-                    _elixir = Mathf.Clamp(_elixir, 0, _maxElixir);
-                    _darkElixir = Mathf.Clamp(_darkElixir, 0, _maxDarkElixir);
+
+                    if (_gold > _maxGold) _gold = _maxGold;
+                    if (_elixir > _maxElixir) _elixir = _maxElixir;
+                    if (_darkElixir > _maxDarkElixir) _darkElixir = _maxDarkElixir;
+
                     UpdateResourcesUI();
                 }
-            }           
+            }
             else if (UI_Train.instanse.isActive)
             {
                 UI_Train.instanse.Sync();
@@ -814,8 +807,11 @@
             UI_Main.instanse._goldText.text = _gold.ToString();
             UI_Main.instanse._elixirText.text = _elixir.ToString();
 
-            UI_Main.instanse._goldBar.fillAmount = (_maxGold > 0 ? ((float)_gold / (float)_maxGold) : 0);
-            UI_Main.instanse._elixirBar.fillAmount = (_maxElixir > 0 ? ((float)_elixir / (float)_maxElixir) : 0);
+            float goldFill = (_maxGold > 0 ? ((float)_gold / (float)_maxGold) : 0);
+            float elixirFill = (_maxElixir > 0 ? ((float)_elixir / (float)_maxElixir) : 0);
+
+            UI_Main.instanse._goldBar.fillAmount = Mathf.Clamp01(goldFill);
+            UI_Main.instanse._elixirBar.fillAmount = Mathf.Clamp01(elixirFill);
         }
 
         public void RushSyncRequest()

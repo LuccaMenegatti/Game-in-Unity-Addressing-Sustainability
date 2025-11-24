@@ -49,27 +49,16 @@ namespace DevelopersHub.ClashOfWhatecer
             {
                 Data.BuildingID selectedID = Building.selectedInstanse.id;
                 bool isConstructing = Building.selectedInstanse.data.isConstructing;
-
                 infoPanel.gameObject.SetActive(UI_Main.instanse.isActive);
 
-                if ((selectedID == Data.BuildingID.obstacle || selectedID == Data.BuildingID.tree) && UI_Main.instanse.isActive && !isConstructing)
+                if (selectedID == Data.BuildingID.tree && UI_Main.instanse.isActive && !isConstructing)
                 {
                     removePanel.gameObject.SetActive(true);
-
                     int removeCostAmount = 50;
                     removeCostIcon.sprite = AssetsBank.instanse.elixirIcon;
                     removeCost.text = removeCostAmount.ToString();
-
-                    if (Player.instanse.elixir >= removeCostAmount)
-                    {
-                        removeCost.color = Color.white;
-                        canDo = true;
-                    }
-                    else
-                    {
-                        removeCost.color = Color.red;
-                        canDo = false;
-                    }
+                    removeCost.color = Color.white;
+                    canDo = true;
                     removeCost.ForceMeshUpdate(true);
                 }
                 else

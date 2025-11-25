@@ -652,6 +652,10 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public void UpdateGridPosition(Vector3 basePosition, Vector3 currentPosition)
         {
+            if (id == Data.BuildingID.tree && Building.buildInstanse != this)
+            {
+                return;
+            }
 
             Vector3 dir = currentPosition - basePosition;
             Vector3 original = UI_Main.instanse._grid.CellToWorld(_X, _Y);

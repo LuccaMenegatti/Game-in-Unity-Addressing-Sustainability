@@ -7,7 +7,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -21,7 +20,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
         private const string _mysqlServer = "127.0.0.1";
         private const string _mysqlUsername = "root";
         private const string _mysqlPassword = "";
-        private const string _mysqlDatabase = "clash_of_whatever";
+        private const string _mysqlDatabase = "eco_city";
 
         public static MySqlConnection GetMysqlConnection()
         {
@@ -78,33 +77,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     updating = true;
                     updateTime = DateTime.Now;
                     GeneralUpdate(deltaTime);
-                }
-            }
-            if (!warUpdating)
-            {
-                if ((DateTime.Now - warUpdateTime).TotalSeconds >= warUpdatePeriod)
-                {
-                    warUpdating = true;
-                    warUpdateTime = DateTime.Now;
-                    WarUpdate();
-                }
-            }
-            if (!warCheckUpdating)
-            {
-                if ((DateTime.Now - warCheckTime).TotalSeconds >= warCheckPeriod)
-                {
-                    warCheckUpdating = true;
-                    warCheckTime = DateTime.Now;
-                    GeneralUpdateWar();
-                }
-            }
-            if (!obsticlesUpdating)
-            {
-                if ((DateTime.Now - obsticlesTime).TotalSeconds >= obsticlesPeriod)
-                {
-                    obsticlesUpdating = true;
-                    obsticlesTime = DateTime.Now;
-                    ObsticlesCreation();
                 }
             }
         }
@@ -174,7 +146,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 packet.Write(1);
                 packet.Write(authBytes.Length);
                 packet.Write(authBytes);
-                int battles = await GetUnreadBattleReportsAsync(auth.accountID);
+                int battles = 0;
                 packet.Write(battles);
             }
             else
@@ -182,34 +154,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 packet.Write(0);
             }
             Sender.TCP_Send(id, packet);
-        }
-
-        private async static Task<int> GetUnreadBattleReportsAsync(long id)
-        {
-            Task<int> task = Task.Run(() =>
-            {
-                int count = 0;
-                using (MySqlConnection connection = GetMysqlConnection())
-                {
-                    string query = String.Format("SELECT COUNT(id) AS count FROM battles WHERE defender_id = {0} AND seen <= 0;", id);
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        using (MySqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                while (reader.Read())
-                                {
-                                    int.TryParse(reader["count"].ToString(), out count);
-                                }
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-                return count;
-            });
-            return await task;
         }
 
         private async static Task<Data.InitializationData> AuthenticatePlayerAsync(int id, string device, string password, string username)
@@ -282,7 +226,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                         Data.BuildingID.elixirstorage.ToString(), initializationData.accountID, esX, esY, esX, esY);
                     using (MySqlCommand command = new MySqlCommand(query, connection)) { command.ExecuteNonQuery(); }
 
-                   
+
                     List<Vector2Int> occupiedPositions = new List<Vector2Int>();
 
                     occupiedPositions.Add(new Vector2Int(thX, thY));
@@ -342,8 +286,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 {
                     command.ExecuteNonQuery();
                 }
-                initializationData.serverUnits = GetServerUnits(connection);
-                initializationData.serverSpells = GetServerSpells(connection);
                 initializationData.serverBuildings = GetServerBuildings(connection);
                 initializationData.research = GetResearchList(connection, initializationData.accountID);
                 connection.Close();
@@ -361,8 +303,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
             {
                 packet.Write(1);
                 List<Data.Building> buildings = await GetBuildingsAsync(account_id);
-                player.units = await GetUnitsAsync(account_id);
-                player.spells = await GetSpellsAsync(account_id);
+                player.units = new List<Data.Unit>();
+                player.spells = new List<Data.Spell>();
                 player.buildings = buildings;
                 string playerData = await Data.SerializeAsync<Data.Player>(player);
                 byte[] playerBytes = await Data.CompressAsync(playerData);
@@ -431,7 +373,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
             Data.Player data = new Data.Player();
             using (MySqlConnection connection = GetMysqlConnection())
             {
-                string query = String.Format("SELECT id, name, gems, trophies, banned, shield, level, xp, clan_join_timer, clan_id, clan_rank, war_id, NOW() AS now_time, email, map_layout, shld_cldn_1, shld_cldn_2, shld_cldn_3 FROM accounts WHERE id = {0};", id);
+                string query = String.Format("SELECT id, name, gems, trophies, banned, shield, level, xp, NOW() AS now_time, email, map_layout, shld_cldn_1, shld_cldn_2, shld_cldn_3 FROM accounts WHERE id = {0};", id);
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -450,15 +392,11 @@ namespace DevelopersHub.RealtimeNetworking.Server
                                 data.banned = ban > 0;
                                 DateTime.TryParse(reader["now_time"].ToString(), out data.nowTime);
                                 DateTime.TryParse(reader["shield"].ToString(), out data.shield);
-                                DateTime.TryParse(reader["clan_join_timer"].ToString(), out data.clanTimer);
                                 DateTime.TryParse(reader["shld_cldn_1"].ToString(), out data.shield1);
                                 DateTime.TryParse(reader["shld_cldn_2"].ToString(), out data.shield2);
                                 DateTime.TryParse(reader["shld_cldn_3"].ToString(), out data.shield3);
                                 int.TryParse(reader["level"].ToString(), out data.level);
                                 int.TryParse(reader["xp"].ToString(), out data.xp);
-                                long.TryParse(reader["clan_id"].ToString(), out data.clanID);
-                                int.TryParse(reader["clan_rank"].ToString(), out data.clanRank);
-                                long.TryParse(reader["war_id"].ToString(), out data.warID);
                                 int.TryParse(reader["map_layout"].ToString(), out data.layout);
                             }
                         }
@@ -2050,9 +1988,6 @@ namespace DevelopersHub.RealtimeNetworking.Server
             using (MySqlConnection connection = GetMysqlConnection())
             {
                 GeneralUpdateBuildings(connection);
-                GeneralUpdateUnitTraining(connection, (float)deltaTime);
-                GeneralUpdateSpellBrewing(connection, (float)deltaTime);
-                GeneralUpdateBattle(connection, deltaTime);
                 connection.Close();
             }
             return true;
@@ -4033,14 +3968,14 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 {
                     int buildersCount = 100;
                     int constructingCount = GetBuildingConstructionCount(account_id, connection);
-                  
+
                     if (time > 0 && buildersCount <= constructingCount)
                     {
                         response = 5;
                     }
                     else
                     {
-                        bool limited = false; 
+                        bool limited = false;
                         if (limited)
                         {
                             response = 6;
@@ -4050,7 +3985,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             bool resourcesOk = false;
 
                             if (isTreeOrObstacle)
-                            {        
+                            {
                                 long townHallId = 0;
                                 string thQuery = String.Format("SELECT id FROM buildings WHERE account_id = {0} AND global_id = '{1}';", account_id, Data.BuildingID.townhall.ToString());
 
@@ -4112,7 +4047,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 }
                 else
                 {
-                    response = 3; 
+                    response = 3;
                 }
                 connection.Close();
             }

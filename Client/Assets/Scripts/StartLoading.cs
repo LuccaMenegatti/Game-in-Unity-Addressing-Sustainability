@@ -1,12 +1,12 @@
-﻿namespace DevelopersHub.ClashOfWhatecer 
-{ 
-    using System.Collections;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using TMPro;
+﻿namespace DevelopersHub.ClashOfWhatecer
+{
     using DevelopersHub.RealtimeNetworking.Client;
-    using UnityEngine.SceneManagement;
     using System;
+    using System.Collections;
+    using TMPro;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
+    using UnityEngine.UI;
 
     public class StartLoading : MonoBehaviour
     {
@@ -166,7 +166,7 @@
             createName = _inputName.text.Trim();
             if (!string.IsNullOrEmpty(createName))
             {
-                if(createName.Length > 20)
+                if (createName.Length > 20)
                 {
                     switch (Language.instanse.language)
                     {

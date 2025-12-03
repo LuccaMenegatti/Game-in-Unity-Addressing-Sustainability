@@ -1,6 +1,5 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using TMPro;
@@ -81,7 +80,7 @@ namespace DevelopersHub.ClashOfWhatecer
             var prefab = UI_Main.instanse.GetBuildingPrefab(id);
             if (prefab.Item1 != null)
             {
-                if(x < 0 || y < 0)
+                if (x < 0 || y < 0)
                 {
                     Vector2Int point = UI_Main.instanse._grid.GetBestBuildingPlace(prefab.Item2.rows, prefab.Item2.columns);
                     x = point.x;
@@ -103,7 +102,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
                 for (int i = 0; i < Player.instanse.initializationData.serverBuildings.Count; i++)
                 {
-                    if(Player.instanse.initializationData.serverBuildings[i].id != id.ToString() || Player.instanse.initializationData.serverBuildings[i].level != 1) { continue; }
+                    if (Player.instanse.initializationData.serverBuildings[i].id != id.ToString() || Player.instanse.initializationData.serverBuildings[i].level != 1) { continue; }
                     data.columns = Player.instanse.initializationData.serverBuildings[i].columns;
                     data.rows = Player.instanse.initializationData.serverBuildings[i].rows;
                     data.buildTime = Player.instanse.initializationData.serverBuildings[i].buildTime;
@@ -112,7 +111,7 @@ namespace DevelopersHub.ClashOfWhatecer
                     break;
                 }
 
-                if(!havrResources)
+                if (!havrResources)
                 {
                     return false;
                 }

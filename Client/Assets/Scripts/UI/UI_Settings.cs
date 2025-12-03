@@ -1,9 +1,9 @@
 ﻿namespace DevelopersHub.ClashOfWhatecer
 {
+    using DevelopersHub.RealtimeNetworking.Client;
+    using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
-    using TMPro;
-    using DevelopersHub.RealtimeNetworking.Client;
 
     public class UI_Settings : MonoBehaviour
     {

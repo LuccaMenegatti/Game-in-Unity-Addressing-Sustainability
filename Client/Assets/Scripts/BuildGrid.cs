@@ -1,9 +1,7 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using UnityEngine.Tilemaps;
 
     public class BuildGrid : MonoBehaviour
     {
@@ -249,7 +247,7 @@ namespace DevelopersHub.ClashOfWhatecer
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             if (!debug) { return; }
@@ -278,7 +276,7 @@ namespace DevelopersHub.ClashOfWhatecer
             Gizmos.DrawLine(end, side1);
             Gizmos.DrawLine(side1, start);
         }
-        #endif
+#endif
 
     }
 }

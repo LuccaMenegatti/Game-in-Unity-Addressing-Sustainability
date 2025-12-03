@@ -1,7 +1,5 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -13,7 +11,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private bool _active = false; public bool isActive { get { return _active; } }
         private static UI_PrivacyPolicy _instance = null; public static UI_PrivacyPolicy instanse { get { return _instance; } }
-        
+
         private void Awake()
         {
             _instance = this;

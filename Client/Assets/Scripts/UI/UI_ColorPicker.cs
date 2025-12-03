@@ -1,7 +1,5 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -54,7 +52,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public void Close()
         {
-            if(_callback != null)
+            if (_callback != null)
             {
                 _callback.Invoke(false, _color);
                 _callback = null;

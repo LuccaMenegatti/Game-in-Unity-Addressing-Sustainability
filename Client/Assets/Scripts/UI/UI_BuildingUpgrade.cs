@@ -1,12 +1,11 @@
 ﻿namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using TMPro;
     using DevelopersHub.RealtimeNetworking.Client;
     using System;
+    using System.Collections.Generic;
+    using TMPro;
+    using UnityEngine;
+    using UnityEngine.UI;
 
     public class UI_BuildingUpgrade : MonoBehaviour
     {
@@ -68,7 +67,7 @@
             for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
             {
                 if (Player.instanse.data.buildings[i].databaseID == id) { x = i; }
-                if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall) { townHallLevel = Player.instanse.data.buildings[i].level ; }
+                if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall) { townHallLevel = Player.instanse.data.buildings[i].level; }
                 if (townHallLevel > 0 && x >= 0) { break; }
             }
             if (x >= 0)
@@ -82,7 +81,7 @@
                 }
                 _titleBuilding.text = Language.instanse.GetBuildingName(Player.instanse.data.buildings[x].id);
                 Sprite icon = AssetsBank.GetBuildingIcon(Player.instanse.data.buildings[x].id, Player.instanse.data.buildings[x].level);
-                if(icon != null)
+                if (icon != null)
                 {
                     _icon.sprite = icon;
                 }
@@ -91,7 +90,7 @@
                     _icon.sprite = _defaultIcon;
                 }
                 serverBuilding = Player.instanse.GetServerBuilding(Player.instanse.data.buildings[x].id, Player.instanse.data.buildings[x].level + 1);
-                if(serverBuilding != null && !(Player.instanse.data.buildings[x].id == Data.BuildingID.townhall && Player.instanse.data.buildings[x].level >= Data.maxTownHallLevel))
+                if (serverBuilding != null && !(Player.instanse.data.buildings[x].id == Data.BuildingID.townhall && Player.instanse.data.buildings[x].level >= Data.maxTownHallLevel))
                 {
                     bool haveResources = true;
                     if (serverBuilding.requiredGold > Player.instanse.gold || serverBuilding.requiredElixir > Player.instanse.elixir || serverBuilding.requiredDarkElixir > Player.instanse.darkElixir || serverBuilding.requiredGems > Player.instanse.data.gems)
@@ -101,12 +100,12 @@
                     if (Player.instanse.data.buildings[x].id == Data.BuildingID.townhall)
                     {
                         Data.BuildingAvailability limits = Data.GetTownHallLimits(Player.instanse.data.buildings[x].level);
-                        if(limits != null)
+                        if (limits != null)
                         {
                             List<Data.BuildingCount> buildings = new List<Data.BuildingCount>();
                             for (int i = 0; i < limits.buildings.Length; i++)
                             {
-                                if(limits.buildings[i].id == Data.BuildingID.townhall.ToString() || limits.buildings[i].id == Data.BuildingID.clancastle.ToString() || limits.buildings[i].id == Data.BuildingID.buildershut.ToString() || limits.buildings[i].id == Data.BuildingID.decoration.ToString() || limits.buildings[i].id == Data.BuildingID.obstacle.ToString())
+                                if (limits.buildings[i].id == Data.BuildingID.townhall.ToString() || limits.buildings[i].id == Data.BuildingID.clancastle.ToString() || limits.buildings[i].id == Data.BuildingID.buildershut.ToString() || limits.buildings[i].id == Data.BuildingID.decoration.ToString() || limits.buildings[i].id == Data.BuildingID.obstacle.ToString())
                                 {
                                     continue;
                                 }
@@ -125,7 +124,7 @@
                                     }
                                 }
                             }
-                            if(buildings.Count > 0)
+                            if (buildings.Count > 0)
                             {
                                 float h = (_requiredBuildingRoot.anchorMax.y - _requiredBuildingRoot.anchorMin.y) * Screen.height;
                                 for (int i = 0; i < buildings.Count; i++)
@@ -189,7 +188,7 @@
                     else
                     {
                         Data.BuildingCount limits = Data.GetBuildingLimits(townHallLevel, Player.instanse.data.buildings[x].id.ToString());
-                        if(limits != null && limits.maxLevel > Player.instanse.data.buildings[x].level)
+                        if (limits != null && limits.maxLevel > Player.instanse.data.buildings[x].level)
                         {
                             if (haveResources == false)
                             {
@@ -238,7 +237,7 @@
                     reqElixir.text = serverBuilding.requiredElixir.ToString();
                     reqDark.text = serverBuilding.requiredDarkElixir.ToString();
                     reqGems.text = serverBuilding.requiredGems.ToString();
-                    if(haveResources == false)
+                    if (haveResources == false)
                     {
                         _upgradeButton.interactable = false;
                     }
@@ -291,7 +290,7 @@
 
         private void Upgrade()
         {
-            if(serverBuilding != null)
+            if (serverBuilding != null)
             {
                 if (serverBuilding.buildTime > 0)
                 {

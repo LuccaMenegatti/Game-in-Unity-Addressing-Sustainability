@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using DevelopersHub.ClashOfWhatecer;
 using UnityEngine;
 
@@ -21,30 +19,30 @@ public class UI_RectResizer : MonoBehaviour
 
     private void Start()
     {
-       Apply();
-       this.enabled = false;
+        Apply();
+        this.enabled = false;
     }
 
     public void Apply()
     {
-        if(rect == null)
+        if (rect == null)
         {
             rect = GetComponent<RectTransform>();
         }
         Vector2 size = rect.sizeDelta;
         Resolution res = Tools.GetCurrentResolutionEditor();
-        switch(action)
+        switch (action)
         {
             case Type.sizeOverride:
-                if(width > 0)
+                if (width > 0)
                 {
                     size.x = res.height * width;
                 }
-                if(height > 0)
+                if (height > 0)
                 {
                     size.y = res.height * height;
                 }
-                if(offset)
+                if (offset)
                 {
                     rect.anchoredPosition = new Vector2(res.height * offsetX, res.height * offsetY);
                 }

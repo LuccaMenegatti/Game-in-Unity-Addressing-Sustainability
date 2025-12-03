@@ -7,7 +7,6 @@ namespace DevelopersHub.ClashOfWhatecer
 
     public class CameraController : MonoBehaviour
     {
-
         private static CameraController _instance = null; public static CameraController instanse { get { return _instance; } }
 
         [SerializeField] private Camera _camera = null;
@@ -189,7 +188,6 @@ namespace DevelopersHub.ClashOfWhatecer
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.researchButton.gameObject)
                             {
                                 handled = true;
-                                UI_Research.instanse.SetStatus(true);
                                 SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.removeButton.gameObject)

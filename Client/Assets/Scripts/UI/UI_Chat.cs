@@ -3,9 +3,9 @@
     using DevelopersHub.RealtimeNetworking.Client;
     using System.Collections;
     using System.Collections.Generic;
+    using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
-    using TMPro;
 
     public class UI_Chat : MonoBehaviour
     {
@@ -66,7 +66,7 @@
         {
             if (_active)
             {
-                if(timer < Data.chatSyncPeriod)
+                if (timer < Data.chatSyncPeriod)
                 {
                     timer += Time.deltaTime;
                 }
@@ -97,7 +97,7 @@
                     globalChats.Add(chat);
                 }
             }
-            if(clanChats.Count > Data.clanChatArchiveMaxMessages)
+            if (clanChats.Count > Data.clanChatArchiveMaxMessages)
             {
                 for (int i = 0; i < clanChats.Count - Data.clanChatArchiveMaxMessages; i++)
                 {
@@ -151,7 +151,7 @@
 
         public void ChatSendResponse(int response)
         {
-            if(response == 2)
+            if (response == 2)
             {
                 switch (Language.instanse.language)
                 {
@@ -223,9 +223,9 @@
             packet.Write((int)Player.RequestsID.GETCHATS);
             packet.Write((int)type);
             long lastMessage = 0;
-            if(type == Data.ChatType.clan)
+            if (type == Data.ChatType.clan)
             {
-                if(clanChats.Count > 0)
+                if (clanChats.Count > 0)
                 {
                     lastMessage = clanChats[clanChats.Count - 1].id;
                 }
@@ -327,7 +327,7 @@
 
         public void ReportResult(int response)
         {
-            if(response == 1)
+            if (response == 1)
             {
                 switch (Language.instanse.language)
                 {

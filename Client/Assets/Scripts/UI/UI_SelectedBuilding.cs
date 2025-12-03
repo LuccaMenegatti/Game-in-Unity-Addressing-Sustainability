@@ -1,7 +1,5 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using TMPro;
     using UnityEngine;
 
@@ -12,7 +10,7 @@ namespace DevelopersHub.ClashOfWhatecer
         [SerializeField] public RectTransform _buildingName = null;
         [SerializeField] public TextMeshProUGUI _buildingNameText = null;
 
-        [SerializeField] private float buildingNameHeight = 0.06f; 
+        [SerializeField] private float buildingNameHeight = 0.06f;
         [SerializeField] private float buildingNameAspect = 6f;
         private Vector2 buildingNameSize = Vector2.one;
 

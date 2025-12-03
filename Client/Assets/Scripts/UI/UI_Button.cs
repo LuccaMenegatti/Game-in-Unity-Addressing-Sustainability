@@ -1,13 +1,10 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
 
     public class UI_Button : MonoBehaviour
     {
-
         public Button button = null;
         public RectTransform rect = null;
         [SerializeField] private float height = 0.08f;
@@ -16,7 +13,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void Awake()
         {
-            if(rect == null)
+            if (rect == null)
             {
                 rect = GetComponent<RectTransform>();
             }

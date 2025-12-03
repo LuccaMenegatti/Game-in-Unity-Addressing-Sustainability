@@ -1,10 +1,8 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
     using DevelopersHub.RealtimeNetworking.Client;
     using System;
+    using UnityEngine;
 
     public class Building : MonoBehaviour
     {
@@ -13,17 +11,19 @@ namespace DevelopersHub.ClashOfWhatecer
         private static Building _buildInstance = null; public static Building buildInstanse { get { return _buildInstance; } set { _buildInstance = value; } }
         private static Building _selectedInstance = null; public static Building selectedInstanse { get { return _selectedInstance; } set { _selectedInstance = value; } }
 
-        [HideInInspector] private Data.Building _data = new Data.Building(); public Data.Building data { get { return _data; }
+        [HideInInspector] private Data.Building _data = new Data.Building(); public Data.Building data
+        {
+            get { return _data; }
             set
             {
                 if (!(lastChange >= Player.instanse.lastUpdateSent && UI_Main.instanse.isActive))
                 {
-                    if(_data.level <= value.level) // TODO -> This will be an issue if you implement building downgrade in the game
+                    if (_data.level <= value.level) // TODO -> This will be an issue if you implement building downgrade in the game
                     {
                         _data = value; DataSet();
                     }
                 }
-            } 
+            }
         }
         public int level { get { return _data.level; } set { _data.level = value; } }
         public bool isCons { get { return _data.isConstructing; } set { _data.isConstructing = value; } }
@@ -44,7 +44,8 @@ namespace DevelopersHub.ClashOfWhatecer
 
         [HideInInspector] public DateTime lastChange = DateTime.Now;
 
-        [System.Serializable] public class Level
+        [System.Serializable]
+        public class Level
         {
             public int level = 1;
             public GameObject elements = null;
@@ -54,16 +55,18 @@ namespace DevelopersHub.ClashOfWhatecer
             [HideInInspector] public Angles[] angles = null;
         }
 
-        [System.Serializable] public class Angles
-        {            
+        [System.Serializable]
+        public class Angles
+        {
             public float angle = 0;
             public Transform renderer = null;
             public Transform muzzle = null;
             public Transform direction = null;
         }
 
-        [System.Serializable] public class Wall
-        {            
+        [System.Serializable]
+        public class Wall
+        {
             public GameObject center = null;
             public GameObject back = null;
             public GameObject left = null;
@@ -85,7 +88,7 @@ namespace DevelopersHub.ClashOfWhatecer
         {
             get
             {
-                if(_center == null)
+                if (_center == null)
                 {
                     return transform;
                 }
@@ -142,11 +145,11 @@ namespace DevelopersHub.ClashOfWhatecer
             {
                 _constructionEffects.SetActive(false);
             }
-            if(_levels != null && _levels.Length > 0)
+            if (_levels != null && _levels.Length > 0)
             {
                 for (int i = 0; i < _levels.Length; i++)
                 {
-                    if(_levels[i] != null && _levels[i]._angles != null && _levels[i]._angles.Length > 0)
+                    if (_levels[i] != null && _levels[i]._angles != null && _levels[i]._angles.Length > 0)
                     {
                         _levels[i].angles = new Angles[_levels[i]._angles.Length];
                         for (int j = 0; j < _levels[i]._angles.Length; j++)
@@ -158,7 +161,7 @@ namespace DevelopersHub.ClashOfWhatecer
                         float cla = Mathf.Infinity;
                         for (int j = 0; j < _levels[i].angles.Length; j++)
                         {
-                            if(_levels[i].angles[j] != null && _levels[i].angles[j].renderer != null)
+                            if (_levels[i].angles[j] != null && _levels[i].angles[j].renderer != null)
                             {
                                 _levels[i].angles[j].renderer.gameObject.SetActive(false);
                                 if (_levels[i].angles[j].renderer.childCount > 0)
@@ -176,7 +179,7 @@ namespace DevelopersHub.ClashOfWhatecer
                                 if (_levels[i].angles[j].direction != null)
                                 {
                                     Vector3 cntr = transform.position;
-                                    if(_center != null)
+                                    if (_center != null)
                                     {
                                         cntr = _center.position;
                                     }
@@ -199,7 +202,7 @@ namespace DevelopersHub.ClashOfWhatecer
                                 }
                             }
                         }
-                        if(closest >= 0)
+                        if (closest >= 0)
                         {
                             _levels[i].angles[closest].renderer.gameObject.SetActive(true);
                         }
@@ -238,7 +241,7 @@ namespace DevelopersHub.ClashOfWhatecer
                 scale.x = _data.radius;
                 scale.y = _data.radius;
                 _rangeEffects.transform.localScale = scale;
-                if(_data.blindRange > 0 && _blindRangeEffects)
+                if (_data.blindRange > 0 && _blindRangeEffects)
                 {
                     scale = _blindRangeEffects.transform.localScale;
                     scale.x = _data.blindRange;
@@ -253,7 +256,7 @@ namespace DevelopersHub.ClashOfWhatecer
             if (levelIndex >= 0 && _levels[levelIndex].angles != null)
             {
                 if (_angleIndex >= 0 && _levels[levelIndex].angles[_angleIndex] != null && _levels[levelIndex].angles[_angleIndex].muzzle != null) { return _levels[levelIndex].angles[_angleIndex].muzzle; }
-                
+
                 /*
                 int closest = -1;
                 float distance = Mathf.infinity;
@@ -334,24 +337,24 @@ namespace DevelopersHub.ClashOfWhatecer
                     cntr = _center.position;
                 }
                 _angle = Vector2.SignedAngle(Vector2.down, (target - cntr).normalized);
-                if(_angle < 0)
+                if (_angle < 0)
                 {
                     _angle += 360;
                 }
                 _angle -= 45;
-                if(_angle < 0) 
+                if (_angle < 0)
                 {
                     _angle += 360;
                 }
                 int closest = -1;
                 float distance = Mathf.Infinity;
-                for(int i = 0; i < _levels[levelIndex].angles.Length; i++)
+                for (int i = 0; i < _levels[levelIndex].angles.Length; i++)
                 {
                     if (_levels[levelIndex].angles[i] != null)
                     {
                         if (_levels[levelIndex].angles[i].renderer != null) { _levels[levelIndex].angles[i].renderer.gameObject.SetActive(false); }
                         float d = Mathf.Abs(_levels[levelIndex].angles[i].angle - _angle);
-                        if(d < distance)
+                        if (d < distance)
                         {
                             distance = d;
                             closest = i;
@@ -367,63 +370,63 @@ namespace DevelopersHub.ClashOfWhatecer
 
 
 
-/*
-                if (_levels[levelIndex].rotations.r000 != null) { _levels[levelIndex].rotations.r000.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r045 != null) { _levels[levelIndex].rotations.r045.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r090 != null) { _levels[levelIndex].rotations.r090.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r135 != null) { _levels[levelIndex].rotations.r135.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r180 != null) { _levels[levelIndex].rotations.r180.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r225 != null) { _levels[levelIndex].rotations.r225.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r270 != null) { _levels[levelIndex].rotations.r270.gameObject.SetActive(false); }
-                if (_levels[levelIndex].rotations.r315 != null) { _levels[levelIndex].rotations.r315.gameObject.SetActive(false); }
+                /*
+                                if (_levels[levelIndex].rotations.r000 != null) { _levels[levelIndex].rotations.r000.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r045 != null) { _levels[levelIndex].rotations.r045.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r090 != null) { _levels[levelIndex].rotations.r090.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r135 != null) { _levels[levelIndex].rotations.r135.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r180 != null) { _levels[levelIndex].rotations.r180.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r225 != null) { _levels[levelIndex].rotations.r225.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r270 != null) { _levels[levelIndex].rotations.r270.gameObject.SetActive(false); }
+                                if (_levels[levelIndex].rotations.r315 != null) { _levels[levelIndex].rotations.r315.gameObject.SetActive(false); }
 
-                if (_angle >= 337.5f || _angle <= 22.5f)
-                {
-                    // 0
-                    if (_levels[levelIndex].rotations.r000 != null) { _levels[levelIndex].rotations.r000.gameObject.SetActive(true); }
-                }
-                else if (_angle <= 67.5f)
-                {
-                    // 45
-                    if (_levels[levelIndex].rotations.r045 != null) { _levels[levelIndex].rotations.r045.gameObject.SetActive(true); }
-                }
-                else if (_angle <= 112.5f)
-                {
-                    // 90
-                    if (_levels[levelIndex].rotations.r090 != null) { _levels[levelIndex].rotations.r090.gameObject.SetActive(true); }
-                }
-                else if (_angle <= 157.5f)
-                {
-                    // 135
-                    if (_levels[levelIndex].rotations.r135 != null) { _levels[levelIndex].rotations.r135.gameObject.SetActive(true); }
-                }
-                else if (_angle <= 202.5f)
-                {
-                    // 180
-                    if (_levels[levelIndex].rotations.r180 != null) { _levels[levelIndex].rotations.r180.gameObject.SetActive(true); }
-                }
-                else if (_angle <= 247.5f)
-                {
-                    // 225
-                    if (_levels[levelIndex].rotations.r225 != null) { _levels[levelIndex].rotations.r225.gameObject.SetActive(true); }
-                }
-                else if (_angle <= 292.5f)
-                {
-                    // 270
-                    if (_levels[levelIndex].rotations.r270 != null) { _levels[levelIndex].rotations.r270.gameObject.SetActive(true); }
-                }
-                else
-                {
-                    // 315
-                    if (_levels[levelIndex].rotations.r315 != null) { _levels[levelIndex].rotations.r315.gameObject.SetActive(true); }
-                }
-                */
+                                if (_angle >= 337.5f || _angle <= 22.5f)
+                                {
+                                    // 0
+                                    if (_levels[levelIndex].rotations.r000 != null) { _levels[levelIndex].rotations.r000.gameObject.SetActive(true); }
+                                }
+                                else if (_angle <= 67.5f)
+                                {
+                                    // 45
+                                    if (_levels[levelIndex].rotations.r045 != null) { _levels[levelIndex].rotations.r045.gameObject.SetActive(true); }
+                                }
+                                else if (_angle <= 112.5f)
+                                {
+                                    // 90
+                                    if (_levels[levelIndex].rotations.r090 != null) { _levels[levelIndex].rotations.r090.gameObject.SetActive(true); }
+                                }
+                                else if (_angle <= 157.5f)
+                                {
+                                    // 135
+                                    if (_levels[levelIndex].rotations.r135 != null) { _levels[levelIndex].rotations.r135.gameObject.SetActive(true); }
+                                }
+                                else if (_angle <= 202.5f)
+                                {
+                                    // 180
+                                    if (_levels[levelIndex].rotations.r180 != null) { _levels[levelIndex].rotations.r180.gameObject.SetActive(true); }
+                                }
+                                else if (_angle <= 247.5f)
+                                {
+                                    // 225
+                                    if (_levels[levelIndex].rotations.r225 != null) { _levels[levelIndex].rotations.r225.gameObject.SetActive(true); }
+                                }
+                                else if (_angle <= 292.5f)
+                                {
+                                    // 270
+                                    if (_levels[levelIndex].rotations.r270 != null) { _levels[levelIndex].rotations.r270.gameObject.SetActive(true); }
+                                }
+                                else
+                                {
+                                    // 315
+                                    if (_levels[levelIndex].rotations.r315 != null) { _levels[levelIndex].rotations.r315.gameObject.SetActive(true); }
+                                }
+                                */
             }
         }
 
         public void AdjustUI(bool checkLevel = false)
         {
-            if(checkLevel)
+            if (checkLevel)
             {
                 CheckLevel();
             }
@@ -432,7 +435,7 @@ namespace DevelopersHub.ClashOfWhatecer
             {
                 if (collectTimeout)
                 {
-                    if(collectTimer > 0)
+                    if (collectTimer > 0)
                     {
                         collectTimer -= Time.deltaTime;
                     }
@@ -636,7 +639,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public void BuildForFirstTimeStarted()
         {
-            if(_constructionEffects != null && data.buildTime > 0)
+            if (_constructionEffects != null && data.buildTime > 0)
             {
                 _constructionEffects.SetActive(true);
             }
@@ -664,7 +667,7 @@ namespace DevelopersHub.ClashOfWhatecer
             _currentX = p.x;
             _currentY = p.y;
             SetPosition(_currentX, _currentY);
-            if(_X != _currentX || _Y != _currentY)
+            if (_X != _currentX || _Y != _currentY)
             {
                 if (_baseArea)
                 {
@@ -676,7 +679,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void SetBaseColor()
         {
-            if(UI_Main.instanse._grid.CanPlaceBuilding(this, currentX, currentY))
+            if (UI_Main.instanse._grid.CanPlaceBuilding(this, currentX, currentY))
             {
                 UI_Build.instanse.clickConfirmButton.interactable = true;
                 if (_baseArea)
@@ -700,7 +703,7 @@ namespace DevelopersHub.ClashOfWhatecer
         {
             if (selectedInstanse != null)
             {
-                if(selectedInstanse == this)
+                if (selectedInstanse == this)
                 {
                     return;
                 }
@@ -725,11 +728,11 @@ namespace DevelopersHub.ClashOfWhatecer
             }
 
             selectedInstanse = this;
-            
+
             UI_SelectedBuilding.instance._elements.SetActive(true);
             UI_SelectedBuilding.instance._buildingNameText.SetText(Language.instanse.GetBuildingName(id, data.level));
             UI_SelectedBuilding.instance._buildingNameText.ForceMeshUpdate(true);
-            
+
             if (!scout)
             {
                 if (_selectEffects)
@@ -860,15 +863,15 @@ namespace DevelopersHub.ClashOfWhatecer
                         // index_f = true;
                     }
                 }
-                if(_levels[levelIndex].wall.left != null)
+                if (_levels[levelIndex].wall.left != null)
                 {
                     _levels[levelIndex].wall.left.gameObject.SetActive(index_l);
                 }
-                if(_levels[levelIndex].wall.back != null)
+                if (_levels[levelIndex].wall.back != null)
                 {
                     _levels[levelIndex].wall.back.gameObject.SetActive(index_b);
                 }
-                if(_levels[levelIndex].wall.center != null)
+                if (_levels[levelIndex].wall.center != null)
                 {
                     _levels[levelIndex].wall.center.gameObject.SetActive(!index_b && !index_l);
                 }
@@ -893,16 +896,16 @@ namespace DevelopersHub.ClashOfWhatecer
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if(!Application.isPlaying && _center != null)
+            if (!Application.isPlaying && _center != null)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(_center.position, 0.1f);
             }
         }
-        #endif
+#endif
 
     }
 }

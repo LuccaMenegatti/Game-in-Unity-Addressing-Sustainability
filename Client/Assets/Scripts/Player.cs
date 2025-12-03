@@ -1,11 +1,10 @@
 ﻿namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
+    using DevelopersHub.RealtimeNetworking.Client;
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
-    using DevelopersHub.RealtimeNetworking.Client;
     using UnityEngine.SceneManagement;
-    using System;
 
     public class Player : MonoBehaviour
     {
@@ -13,7 +12,7 @@
         public Data.Player data = new Data.Player();
         private static Player _instance = null; public static Player instanse { get { return _instance; } }
         public Data.InitializationData initializationData = new Data.InitializationData();
-       
+
         public Data.ServerBuilding GetServerBuilding(Data.BuildingID id, int level)
         {
             for (int i = 0; i < initializationData.serverBuildings.Count; i++)
@@ -47,7 +46,7 @@
         private int _maxElixir = 0; public int maxElixir { get { return _maxElixir; } }
 
         private int _darkElixir = 0; public int darkElixir { get { return _darkElixir; } set { _darkElixir = value; } }
-        private int _maxDarkElixir = 0; public int maxDarkElixir { get { return _maxDarkElixir; }  }
+        private int _maxDarkElixir = 0; public int maxDarkElixir { get { return _maxDarkElixir; } }
 
         private int _townHallLevel = 1; public int townHallLevel { get { return _townHallLevel; } }
         private int _spellFactoryLevel = 0; public int spellFactoryLevel { get { return _spellFactoryLevel; } }
@@ -106,7 +105,7 @@
             {
                 if (timer <= 0)
                 {
-                    if(updating == false)
+                    if (updating == false)
                     {
                         updating = true;
                         timer = syncTime;
@@ -135,7 +134,7 @@
                 {
                     case RequestsID.AUTH:
                         response = packet.ReadInt();
-                        if(response == 1)
+                        if (response == 1)
                         {
                             bytesLength = packet.ReadInt();
                             bytes = packet.ReadBytes(bytesLength);
@@ -145,17 +144,17 @@
                             bool isThereNewerVersion = true;
                             for (int i = 0; i < initializationData.versions.Length; i++)
                             {
-                                if(initializationData.versions[i] == Application.version)
+                                if (initializationData.versions[i] == Application.version)
                                 {
                                     versionValid = true;
                                     isThereNewerVersion = (i < (initializationData.versions.Length - 1));
                                     break;
                                 }
                             }
-                            if(!versionValid)
+                            if (!versionValid)
                             {
                                 switch (Language.instanse.language)
-                                {                                 
+                                {
                                     default:
                                         MessageBox.Open(1, 0.9f, false, MessageResponded, new string[] { "This version is expired. Please download the new version of the game." }, new string[] { "Exit" });
                                         break;
@@ -163,7 +162,7 @@
                             }
                             else
                             {
-                                if(isThereNewerVersion)
+                                if (isThereNewerVersion)
                                 {
                                     /*
                                     switch (Language.instanse.language)
@@ -201,7 +200,7 @@
                         break;
                     case RequestsID.SYNC:
                         response = packet.ReadInt();
-                        if(response == 1)
+                        if (response == 1)
                         {
                             int playerBytesLength = packet.ReadInt();
                             byte[] playerBytes = packet.ReadBytes(playerBytesLength);
@@ -412,7 +411,7 @@
                             bytesLength = packet.ReadInt();
                             bytes = packet.ReadBytes(bytesLength);
                             buildings = Data.Desrialize<List<Data.BattleStartBuildingData>>(Data.Decompress(bytes));
-                        }                        
+                        }
                         break;
                     case RequestsID.BATTLEEND:
                         int stars = packet.ReadInt();
@@ -421,7 +420,7 @@
                         int lootedElixir = packet.ReadInt();
                         int lootedDark = packet.ReadInt();
                         int trophies = packet.ReadInt();
-                        int frame = packet.ReadInt();                       
+                        int frame = packet.ReadInt();
                         break;
                     case RequestsID.OPENCLAN:
                         bool haveClan = packet.ReadBool();
@@ -501,7 +500,7 @@
                         List<Data.JoinRequest> requests = Data.Desrialize<List<Data.JoinRequest>>(Data.Decompress(bytes));
                         break;
                     case RequestsID.JOINRESPONSE:
-                        response = packet.ReadInt();                      
+                        response = packet.ReadInt();
                         break;
                     case RequestsID.SENDCHAT:
                         response = packet.ReadInt();
@@ -529,8 +528,8 @@
                         response = packet.ReadInt();
                         if (response == -1)
                         {
-                            string kicker = packet.ReadString();                           
-                        }                       
+                            string kicker = packet.ReadString();
+                        }
                         break;
                     case RequestsID.BREW:
                         response = packet.ReadInt();
@@ -587,7 +586,6 @@
                                 initializationData.research.Add(research);
                             }
                         }
-                        UI_Research.instanse.ResearchResponse(response, research);
                         break;
                     case RequestsID.PROMOTEMEMBER:
                         databaseID = packet.ReadLong();
@@ -596,7 +594,7 @@
                         {
                             string promoter = packet.ReadString();
                             MessageBox.Open(1, 0.8f, false, MessageResponded, new string[] { promoter + " promoted your clan rank." }, new string[] { "OK" });
-                        }                       
+                        }
                         break;
                     case RequestsID.DEMOTEMEMBER:
                         databaseID = packet.ReadLong();
@@ -605,7 +603,7 @@
                         {
                             string demoter = packet.ReadString();
                             MessageBox.Open(1, 0.8f, false, MessageResponded, new string[] { demoter + " demoted your clan rank." }, new string[] { "OK" });
-                        }                       
+                        }
                         break;
                     case RequestsID.SCOUT:
                         response = packet.ReadInt();
@@ -623,7 +621,7 @@
                         if (response == 1)
                         {
                             int gemPack = packet.ReadInt();
-                            RushSyncRequest();                           
+                            RushSyncRequest();
                         }
                         break;
                     case RequestsID.BUYSHIELD:
@@ -631,7 +629,7 @@
                         if (response == 1)
                         {
                             int shieldPack = packet.ReadInt();
-                            RushSyncRequest();                        
+                            RushSyncRequest();
                         }
                         break;
                     case RequestsID.REPORTCHAT:
@@ -653,7 +651,7 @@
                         int resPack = packet.ReadInt();
                         if (response == 1)
                         {
-                            RushSyncRequest();                           
+                            RushSyncRequest();
                         }
                         break;
                     case RequestsID.BATTLEREPORTS:
@@ -788,7 +786,7 @@
 
                     UpdateResourcesUI();
                 }
-            }           
+            }
             UI_Main.instanse._usernameText.ForceMeshUpdate(true);
             UI_Main.instanse._levelText.ForceMeshUpdate(true);
             UI_Main.instanse._xpText.ForceMeshUpdate(true);

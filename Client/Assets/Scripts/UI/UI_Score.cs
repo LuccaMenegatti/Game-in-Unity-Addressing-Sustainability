@@ -2,7 +2,7 @@ namespace DevelopersHub.ClashOfWhatecer
 {
     using DevelopersHub.RealtimeNetworking.Client;
     using System.Collections;
-    using System.Linq; 
+    using System.Linq;
     using TMPro;
     using UnityEngine;
     using UnityEngine.UI;

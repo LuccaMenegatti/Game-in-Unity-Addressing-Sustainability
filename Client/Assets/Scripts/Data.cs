@@ -1,13 +1,13 @@
 ﻿namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Xml.Serialization;
-    using System.IO;
-    using System.Collections.Generic;
     using System;
-    using System.Threading.Tasks;
-    using System.Text;
-    using System.Security.Cryptography;
+    using System.Collections.Generic;
+    using System.IO;
     using System.IO.Compression;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Xml.Serialization;
 
     public static class Data
     {
@@ -60,7 +60,7 @@
         public static readonly int recoveryCodeExpiration = 300;
         public static readonly int confirmationCodeExpiration = 300;
         public static readonly int recoveryCodeLength = 6;
-        
+
         public class PlayersRanking
         {
             public int page = 1;
@@ -89,7 +89,7 @@
             catch (Exception)
             {
                 return input;
-            }       
+            }
         }
 
         public static string DecodeString(string input)
@@ -587,11 +587,11 @@
 
         public enum BuildingID
         {
-            townhall = 0, goldmine = 1, goldstorage = 2, elixirmine = 3, elixirstorage = 4, darkelixirmine = 5, 
-            darkelixirstorage = 6, buildershut = 7, armycamp = 8, barracks = 9, darkbarracks = 10, wall = 11, 
-            cannon = 12, archertower = 13, mortor = 14, airdefense = 15, wizardtower = 16, hiddentesla = 19, 
-            bombtower = 20, xbow = 21, infernotower = 22, decoration = 23, obstacle = 24, boomb = 25, springtrap = 26, 
-            airbomb = 27, giantbomb = 28, seekingairmine = 29, skeletontrap = 30, clancastle = 31, spellfactory = 32, 
+            townhall = 0, goldmine = 1, goldstorage = 2, elixirmine = 3, elixirstorage = 4, darkelixirmine = 5,
+            darkelixirstorage = 6, buildershut = 7, armycamp = 8, barracks = 9, darkbarracks = 10, wall = 11,
+            cannon = 12, archertower = 13, mortor = 14, airdefense = 15, wizardtower = 16, hiddentesla = 19,
+            bombtower = 20, xbow = 21, infernotower = 22, decoration = 23, obstacle = 24, boomb = 25, springtrap = 26,
+            airbomb = 27, giantbomb = 28, seekingairmine = 29, skeletontrap = 30, clancastle = 31, spellfactory = 32,
             darkspellfactory = 33, laboratory = 34, airsweeper = 35, kingaltar = 36, qeenaltar = 37, tree = 38,
         }
 
@@ -727,8 +727,8 @@
             public bool hasReply = false;
         }
 
-        
-               
+
+
         public class BattleFrameUnit
         {
             public long id = 0;
@@ -747,7 +747,7 @@
 
         public enum BattleType
         {
-            normal = 1, war = 2, quest = 3 
+            normal = 1, war = 2, quest = 3
         }
 
         public class BattleData
@@ -981,11 +981,11 @@
 
         public static BuildingCount GetBuildingLimits(int townHallLevel, string globalID)
         {
-            if(townHallLevel > 0 && townHallLevel < buildingAvailability.Length)
+            if (townHallLevel > 0 && townHallLevel < buildingAvailability.Length)
             {
                 for (int i = 0; i < buildingAvailability.Length; i++)
                 {
-                    if(buildingAvailability[i].level == townHallLevel)
+                    if (buildingAvailability[i].level == townHallLevel)
                     {
                         for (int j = 0; j < buildingAvailability[i].buildings.Length; j++)
                         {
@@ -1040,7 +1040,7 @@
 
         public static int GetResourceGemCost(int gold, int elixir, int dark)
         {
-            if (gold < 0){gold = 0; }
+            if (gold < 0) { gold = 0; }
             if (elixir < 0) { elixir = 0; }
             if (dark < 0) { dark = 0; }
             if (gold <= 0 && elixir <= 0 && dark <= 0)

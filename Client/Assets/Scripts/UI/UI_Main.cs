@@ -1,7 +1,7 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using UnityEngine;
     using TMPro;
+    using UnityEngine;
     using UnityEngine.UI;
 
     public class UI_Main : MonoBehaviour

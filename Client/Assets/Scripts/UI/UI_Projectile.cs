@@ -1,12 +1,6 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Buffers.Text;
-    using System.Collections;
-    using System.Collections.Generic;
-    using TMPro;
     using UnityEngine;
-    using UnityEngine.UIElements;
-    using static UnityEngine.GraphicsBuffer;
 
     public class UI_Projectile : MonoBehaviour
     {
@@ -53,8 +47,8 @@ namespace DevelopersHub.ClashOfWhatecer
             if (active)
             {
                 timer += Time.deltaTime;
-                if(timer > time) { timer = time; }
-                if(_target && _target != null)
+                if (timer > time) { timer = time; }
+                if (_target && _target != null)
                 {
                     _lastKnowPosition = _target.position;
                 }
@@ -123,11 +117,11 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public static float GetCutveHeight(Data.BuildingID id)
         {
-            switch (id) 
+            switch (id)
             {
                 case Data.BuildingID.mortor: return 1f;
-                default : return 0;
-            } 
+                default: return 0;
+            }
         }
 
     }

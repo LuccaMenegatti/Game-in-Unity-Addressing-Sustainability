@@ -1,12 +1,9 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class AssetsBank : MonoBehaviour
     {
-
         private static AssetsBank _instance = null; public static AssetsBank instanse { get { return _instance; } }
 
         private void Awake()
@@ -104,7 +101,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         public static Sprite GetBuildingIcon(Data.BuildingID id, int level = 1)
         {
-            if(instanse != null)
+            if (instanse != null)
             {
                 return instanse._GetBuildingIcon(id, level);
             }

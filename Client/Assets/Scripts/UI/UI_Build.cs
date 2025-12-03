@@ -1,11 +1,10 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
+    using DevelopersHub.RealtimeNetworking.Client;
+    using System;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
-    using DevelopersHub.RealtimeNetworking.Client;
-    using System;
 
     public class UI_Build : MonoBehaviour
     {
@@ -41,7 +40,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void Update()
         {
-            if(Building.buildInstanse != null && CameraController.instanse.isPlacingBuilding)
+            if (Building.buildInstanse != null && CameraController.instanse.isPlacingBuilding)
             {
                 buttonConfirm.sizeDelta = size / CameraController.instanse.zoomScale;
                 buttonCancel.sizeDelta = size / CameraController.instanse.zoomScale;
@@ -118,7 +117,7 @@ namespace DevelopersHub.ClashOfWhatecer
                 packet.Write(Player.instanse.data.layout);
                 packet.Write((long)0);
                 Building.buildInstanse.lastChange = DateTime.Now;
-                Sender.TCP_Send(packet);              
+                Sender.TCP_Send(packet);
                 BuildConf();
                 if (isBuildingWall)
                 {
@@ -138,7 +137,7 @@ namespace DevelopersHub.ClashOfWhatecer
                 var sb = Player.instanse.initializationData.serverBuildings[Building.buildInstanse.serverIndex];
                 var pData = Player.instanse;
                 bool missingGems = (sb.requiredGems > 0 && sb.requiredGems > pData.data.gems);
-                bool missingElixir = (sb.requiredElixir > 0 && sb.requiredElixir > pData.elixir); 
+                bool missingElixir = (sb.requiredElixir > 0 && sb.requiredElixir > pData.elixir);
                 bool missingDark = (sb.requiredDarkElixir > 0 && sb.requiredDarkElixir > pData.darkElixir);
                 bool missingGold = (sb.requiredGold > 0 && sb.requiredGold > pData.gold);
 
@@ -176,134 +175,134 @@ namespace DevelopersHub.ClashOfWhatecer
         private void CheckeWall()
         {
             int warLayoutIndex = -1;
-            bool haveMoreWall = false;                   
-                int townhallLevel = 1;
-                int haveCount = 0;
-                for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
+            bool haveMoreWall = false;
+            int townhallLevel = 1;
+            int haveCount = 0;
+            for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
+            {
+                if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall) { townhallLevel = Player.instanse.data.buildings[i].level; }
+                if (Player.instanse.data.buildings[i].id != Data.BuildingID.wall) { continue; }
+                haveCount++;
+            }
+            Data.BuildingCount limit = Data.GetBuildingLimits(townhallLevel, Data.BuildingID.wall.ToString());
+            if (limit != null && haveCount < limit.count)
+            {
+                haveMoreWall = true;
+            }
+            if (haveMoreWall)
+            {
+                UI_Build.instanse.wallsBuilt.Add(new Vector2Int(UI_Build.instanse.wallX, UI_Build.instanse.wallY));
+                bool handled = false;
+                if (UI_Build.instanse.wallsBuilt.Count > 1)
                 {
-                    if (Player.instanse.data.buildings[i].id == Data.BuildingID.townhall) { townhallLevel = Player.instanse.data.buildings[i].level; }
-                    if (Player.instanse.data.buildings[i].id != Data.BuildingID.wall) { continue; }
-                    haveCount++;
-                }
-                Data.BuildingCount limit = Data.GetBuildingLimits(townhallLevel, Data.BuildingID.wall.ToString());
-                if (limit != null && haveCount < limit.count)
-                {
-                    haveMoreWall = true;
-                }                   
-                    if (haveMoreWall)
+                    int deltaX = UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x - UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 2].x;
+                    int deltaY = UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y - UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 2].y;
+                    if (Mathf.Abs(deltaX) == 1 && deltaY == 0)
                     {
-                        UI_Build.instanse.wallsBuilt.Add(new Vector2Int(UI_Build.instanse.wallX, UI_Build.instanse.wallY));
-                        bool handled = false;
-                        if (UI_Build.instanse.wallsBuilt.Count > 1)
+                        if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + deltaX, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, 1, 1))
                         {
-                            int deltaX = UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x - UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 2].x;
-                            int deltaY = UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y - UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 2].y;
-                            if (Mathf.Abs(deltaX) == 1 && deltaY == 0)
-                            {
-                                if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + deltaX, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, 1, 1))
-                                {
-                                    handled = true;
-                                    PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + deltaX, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
-                                }
-                                else
-                                {
-                                    if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + 1, 1, 1))
-                                    {
-                                        handled = true;
-                                        PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + 1, warLayoutIndex);
-                                    }
-                                    else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y - 1, 1, 1))
-                                    {
-                                        handled = true;
-                                        PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y - 1, warLayoutIndex);
-                                    }
-                                }
-                            }
-                            else if (Mathf.Abs(deltaY) == 1 && deltaX == 0)
-                            {
-                                if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + deltaY, 1, 1))
-                                {
-                                    handled = true;
-                                    PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + deltaY, warLayoutIndex);
-                                }
-                                else
-                                {
-                                    if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, 1, 1))
-                                    {
-                                        handled = true;
-                                        PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
-                                    }
-                                    else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x - 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, 1, 1))
-                                    {
-                                        handled = true;
-                                        PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x - 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
-                                    }
-                                }
-                            }
+                            handled = true;
+                            PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + deltaX, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
                         }
-                        if (handled == false)
+                        else
                         {
-                            for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
+                            if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + 1, 1, 1))
                             {
-                                if (Player.instanse.data.buildings[i].id != Data.BuildingID.wall) { continue; }
-                                Vector2Int pos = Building.GetBuildingPosition(Player.instanse.data.buildings[i]);
-                                int deltaX = pos.x - UI_Build.instanse.wallX;
-                                int deltaY = pos.y - UI_Build.instanse.wallY;
-                                if (Mathf.Abs(deltaX) == 1 && deltaY == 0)
-                                {
-                                    if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX + deltaX, UI_Build.instanse.wallY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
-                                    {
-                                        handled = true;
-                                        PlaceWall(UI_Build.instanse.wallX + deltaX, UI_Build.instanse.wallY, warLayoutIndex);
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX, UI_Build.instanse.wallY + 1, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
-                                        {
-                                            handled = true;
-                                            PlaceWall(UI_Build.instanse.wallX, UI_Build.instanse.wallY + 1, warLayoutIndex);
-                                            break;
-                                        }
-                                        else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX, UI_Build.instanse.wallY - 1, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
-                                        {
-                                            handled = true;
-                                            PlaceWall(UI_Build.instanse.wallX, UI_Build.instanse.wallY - 1, warLayoutIndex);
-                                            break;
-                                        }
-                                    }
-                                }
-                                else if (Mathf.Abs(deltaY) == 1 && deltaX == 0)
-                                {
-                                    if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX, UI_Build.instanse.wallY + deltaY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
-                                    {
-                                        handled = true;
-                                        PlaceWall(UI_Build.instanse.wallX, UI_Build.instanse.wallY + deltaY, warLayoutIndex);
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX + 1, UI_Build.instanse.wallY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
-                                        {
-                                            handled = true;
-                                            PlaceWall(UI_Build.instanse.wallX + 1, UI_Build.instanse.wallY, warLayoutIndex);
-                                            break;
-                                        }
-                                        else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX - 1, UI_Build.instanse.wallY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
-                                        {
-                                            handled = true;
-                                            PlaceWall(UI_Build.instanse.wallX - 1, UI_Build.instanse.wallY, warLayoutIndex);
-                                            break;
-                                        }
-                                    }
-                                }
+                                handled = true;
+                                PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + 1, warLayoutIndex);
                             }
-                            if (handled == false)
+                            else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y - 1, 1, 1))
                             {
-                                PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
+                                handled = true;
+                                PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y - 1, warLayoutIndex);
                             }
                         }
                     }
+                    else if (Mathf.Abs(deltaY) == 1 && deltaX == 0)
+                    {
+                        if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + deltaY, 1, 1))
+                        {
+                            handled = true;
+                            PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y + deltaY, warLayoutIndex);
+                        }
+                        else
+                        {
+                            if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, 1, 1))
+                            {
+                                handled = true;
+                                PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
+                            }
+                            else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x - 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, 1, 1))
+                            {
+                                handled = true;
+                                PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x - 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
+                            }
+                        }
+                    }
+                }
+                if (handled == false)
+                {
+                    for (int i = 0; i < Player.instanse.data.buildings.Count; i++)
+                    {
+                        if (Player.instanse.data.buildings[i].id != Data.BuildingID.wall) { continue; }
+                        Vector2Int pos = Building.GetBuildingPosition(Player.instanse.data.buildings[i]);
+                        int deltaX = pos.x - UI_Build.instanse.wallX;
+                        int deltaY = pos.y - UI_Build.instanse.wallY;
+                        if (Mathf.Abs(deltaX) == 1 && deltaY == 0)
+                        {
+                            if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX + deltaX, UI_Build.instanse.wallY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
+                            {
+                                handled = true;
+                                PlaceWall(UI_Build.instanse.wallX + deltaX, UI_Build.instanse.wallY, warLayoutIndex);
+                                break;
+                            }
+                            else
+                            {
+                                if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX, UI_Build.instanse.wallY + 1, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
+                                {
+                                    handled = true;
+                                    PlaceWall(UI_Build.instanse.wallX, UI_Build.instanse.wallY + 1, warLayoutIndex);
+                                    break;
+                                }
+                                else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX, UI_Build.instanse.wallY - 1, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
+                                {
+                                    handled = true;
+                                    PlaceWall(UI_Build.instanse.wallX, UI_Build.instanse.wallY - 1, warLayoutIndex);
+                                    break;
+                                }
+                            }
+                        }
+                        else if (Mathf.Abs(deltaY) == 1 && deltaX == 0)
+                        {
+                            if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX, UI_Build.instanse.wallY + deltaY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
+                            {
+                                handled = true;
+                                PlaceWall(UI_Build.instanse.wallX, UI_Build.instanse.wallY + deltaY, warLayoutIndex);
+                                break;
+                            }
+                            else
+                            {
+                                if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX + 1, UI_Build.instanse.wallY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
+                                {
+                                    handled = true;
+                                    PlaceWall(UI_Build.instanse.wallX + 1, UI_Build.instanse.wallY, warLayoutIndex);
+                                    break;
+                                }
+                                else if (UI_Main.instanse._grid.CanPlaceBuilding(UI_Build.instanse.wallX - 1, UI_Build.instanse.wallY, Player.instanse.data.buildings[i].rows, Player.instanse.data.buildings[i].columns))
+                                {
+                                    handled = true;
+                                    PlaceWall(UI_Build.instanse.wallX - 1, UI_Build.instanse.wallY, warLayoutIndex);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (handled == false)
+                    {
+                        PlaceWall(UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].x + 1, UI_Build.instanse.wallsBuilt[UI_Build.instanse.wallsBuilt.Count - 1].y, warLayoutIndex);
+                    }
+                }
+            }
         }
 
         private void PlaceWall(int x, int y, int warIndex)
@@ -316,7 +315,7 @@ namespace DevelopersHub.ClashOfWhatecer
             if (Building.buildInstanse != null)
             {
                 CameraController.instanse.isPlacingBuilding = false;
-                Building.buildInstanse.BuildForFirstTimeStarted();              
+                Building.buildInstanse.BuildForFirstTimeStarted();
             }
         }
 
@@ -325,7 +324,7 @@ namespace DevelopersHub.ClashOfWhatecer
             if (Building.buildInstanse != null)
             {
                 CameraController.instanse.isPlacingBuilding = false;
-                Building.buildInstanse.RemovedFromGrid();                
+                Building.buildInstanse.RemovedFromGrid();
             }
         }
 

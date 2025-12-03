@@ -1,7 +1,6 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
     using DevelopersHub.RealtimeNetworking.Client;
-    using System.Collections;
     using System.Collections.Generic;
     using TMPro;
     using UnityEngine;

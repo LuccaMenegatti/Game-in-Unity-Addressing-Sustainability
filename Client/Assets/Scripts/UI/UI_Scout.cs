@@ -1,8 +1,6 @@
 ﻿namespace DevelopersHub.ClashOfWhatecer
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
@@ -63,7 +61,7 @@
                 _panelScout.SetActive(true);
                 _panelReport.SetActive(false);
                 PlaceBuildings();
-            }            
+            }
             else
             {
                 _backPanel = Player.Panel.main;
@@ -81,7 +79,7 @@
             UI_Main.instanse._grid.Clear();
             for (int i = 0; i < _player.buildings.Count; i++)
             {
-                if(_type == Data.BattleType.war && (_player.buildings[i].warX < 0 || _player.buildings[i].warY < 0))
+                if (_type == Data.BattleType.war && (_player.buildings[i].warX < 0 || _player.buildings[i].warY < 0))
                 {
                     continue;
                 }
@@ -153,12 +151,12 @@
         {
             _active = false;
             isStarted = false;
-            Time.timeScale = 1f;       
+            Time.timeScale = 1f;
             UI_Main.instanse._grid.Clear();
             Player.instanse.SyncData(Player.instanse.data);
             if (_backPanel == Player.Panel.clan)
             {
-                UI_Main.instanse.SetStatus(true);              
+                UI_Main.instanse.SetStatus(true);
             }
             else
             {
@@ -249,6 +247,6 @@
             }
 
             return false;
-        }     
+        }
     }
 }

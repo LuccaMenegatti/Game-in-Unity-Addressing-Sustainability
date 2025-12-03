@@ -1,12 +1,10 @@
 ﻿namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
-    using System.Collections.Generic;
+    using DevelopersHub.RealtimeNetworking.Client;
+    using System;
+    using TMPro;
     using UnityEngine;
     using UnityEngine.UI;
-    using TMPro;
-    using System;
-    using DevelopersHub.RealtimeNetworking.Client;
 
     public class UI_ChatItem : MonoBehaviour
     {
@@ -88,7 +86,7 @@
         public void Inirialize(Data.CharMessage data)
         {
             _data = data;
-            if(data.accountID == Player.instanse.data.id)
+            if (data.accountID == Player.instanse.data.id)
             {
                 _background.color = _yourColor;
             }

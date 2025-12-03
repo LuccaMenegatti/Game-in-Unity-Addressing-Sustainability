@@ -695,7 +695,7 @@
 
         public void SendSyncRequest()
         {
-            Debug.Log("Request Sent."); // For some wierd reason if I remove this debug then buildings upgrade button will delay showing for a few seconds until next update
+            Debug.Log("Request Sent.");
             lastUpdateSent = DateTime.Now;
             Packet p = new Packet();
             p.Write((int)RequestsID.SYNC);
@@ -788,15 +788,7 @@
 
                     UpdateResourcesUI();
                 }
-            }
-            else if (UI_Train.instanse.isActive)
-            {
-                UI_Train.instanse.Sync();
-            }
-            else if (UI_Spell.instanse.isOpen)
-            {
-                UI_Spell.instanse.Sync();
-            }
+            }           
             UI_Main.instanse._usernameText.ForceMeshUpdate(true);
             UI_Main.instanse._levelText.ForceMeshUpdate(true);
             UI_Main.instanse._xpText.ForceMeshUpdate(true);

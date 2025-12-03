@@ -1,11 +1,9 @@
 namespace DevelopersHub.ClashOfWhatecer
 {
-    using System.Collections;
+    using DevelopersHub.RealtimeNetworking.Client;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.EventSystems;
-    using DevelopersHub.RealtimeNetworking.Client;
-    using UnityEngine.Windows;
 
     public class CameraController : MonoBehaviour
     {
@@ -171,23 +169,21 @@ namespace DevelopersHub.ClashOfWhatecer
                                     Building.selectedInstanse.lastChange = System.DateTime.Now;
                                     packet.Write(Building.selectedInstanse.data.databaseID);
                                     Sender.TCP_Send(packet);
-                                } 
+                                }
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.trainButton.gameObject)
                             {
                                 handled = true;
-                                UI_Train.instanse.Open();
                                 SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.clanButton.gameObject)
                             {
-                                handled = true;                               
+                                handled = true;
                                 SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.spellButton.gameObject)
                             {
                                 handled = true;
-                                UI_Spell.instanse.SetStatus(true);
                                 SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
                             }
                             else if (results[i].gameObject == UI_BuildingOptions.instanse.researchButton.gameObject)
@@ -225,7 +221,7 @@ namespace DevelopersHub.ClashOfWhatecer
                         Building.selectedInstanse.Deselected();
                     }
                 }
-            }                      
+            }
             else if (UI_Scout.instanse.isActive)
             {
                 if (results.Count <= 0)
@@ -272,7 +268,7 @@ namespace DevelopersHub.ClashOfWhatecer
         private void MoveStarted()
         {
             if (_zooming == false && (UI_Main.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
-            {              
+            {
                 if (_building)
                 {
                     _buildBasePosition = CameraScreenPositionToWorldPosition(inputs.Main.PointerPosition.ReadValue<Vector2>());
@@ -284,7 +280,7 @@ namespace DevelopersHub.ClashOfWhatecer
                     }
                 }
 
-                if(Building.selectedInstanse != null && Building.selectedInstanse.id != Data.BuildingID.obstacle && !Building.selectedInstanse.scout && Building.selectedInstanse.databaseID > 0)
+                if (Building.selectedInstanse != null && Building.selectedInstanse.id != Data.BuildingID.obstacle && !Building.selectedInstanse.scout && Building.selectedInstanse.databaseID > 0)
                 {
                     _replaceBasePosition = CameraScreenPositionToWorldPosition(inputs.Main.PointerPosition.ReadValue<Vector2>());
                     Vector3Int gridPos = UI_Main.instanse._grid.grid.WorldToCell(_replaceBasePosition);
@@ -299,7 +295,7 @@ namespace DevelopersHub.ClashOfWhatecer
                     }
                 }
 
-                if(_movingBuilding == false && _replacingBuilding == false)
+                if (_movingBuilding == false && _replacingBuilding == false)
                 {
                     _moveRootBasePosition = _root.position;
                     _moveInputBaseScreenPosition = inputs.Main.PointerPosition.ReadValue<Vector2>();
@@ -349,13 +345,13 @@ namespace DevelopersHub.ClashOfWhatecer
         {
             _zooming = false;
         }
-        
+
         private void Update()
         {
             if (UnityEngine.Input.touchSupported == false)
             {
                 float mouseScroll = inputs.Main.MouseScroll.ReadValue<float>();
-                if(mouseScroll > 0)
+                if (mouseScroll > 0)
                 {
                     _zoom -= _mouseZoomSpeed * Time.deltaTime;
                 }

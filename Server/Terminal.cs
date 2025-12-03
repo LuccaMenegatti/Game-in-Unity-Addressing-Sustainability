@@ -110,102 +110,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     case RequestsID.INSTANTBUILD:
                         databaseID = packet.ReadLong();
                         Database.InstantBuild(clientID, databaseID);
-                        break;
-                    case RequestsID.TRAIN:
-                        string globalID = packet.ReadString();
-                        Database.TrainUnit(clientID, globalID);
-                        break;
-                    case RequestsID.CANCELTRAIN:
-                        databaseID = packet.ReadLong();
-                        Database.CancelTrainUnit(clientID, databaseID);
-                        break;
-                    case RequestsID.BATTLEFIND:
-                        Database.FindBattleTarget(clientID);
-                        break;
-                    case RequestsID.BATTLESTART:
-                        int bytesLength = packet.ReadInt();
-                        byte[] bytes = packet.ReadBytes(bytesLength);
-                        int battleType = packet.ReadInt();
-                        Database.StartBattle(clientID, bytes, (Data.BattleType)battleType);
-                        break;
-                    case RequestsID.BATTLEFRAME:
-                        int bfl = packet.ReadInt();
-                        byte[] bf = packet.ReadBytes(bfl);
-                        Database.AddBattleFrame(clientID, bf);
-                        break;
-                    case RequestsID.BATTLEEND:
-                        databaseID = Server.clients[clientID].account;
-                        bool surrender = packet.ReadBool();
-                        int frame = packet.ReadInt();
-                        Database.EndBattle(databaseID, surrender, frame);
-                        break;
-                    case RequestsID.OPENCLAN:
-                        databaseID = packet.ReadLong();
-                        long clanID = packet.ReadLong();
-                        Database.OpenClan(clientID, databaseID, clanID);
-                        break;
-                    case RequestsID.GETCLANS:
-                        int page = packet.ReadInt();
-                        Database.GetClans(clientID, page);
-                        break;
-                    case RequestsID.CREATECLAN:
-                        string clanName = packet.ReadString();
-                        int minTrophies = packet.ReadInt();
-                        int minHall = packet.ReadInt();
-                        int pattern = packet.ReadInt();
-                        int background = packet.ReadInt();
-                        string patternColor = packet.ReadString();
-                        string backgroundColor = packet.ReadString();
-                        int joinType = packet.ReadInt();
-                        Database.CreateClan(clientID, clanName, minTrophies, minHall, pattern, background, patternColor, backgroundColor, joinType);
-                        break;
-                    case RequestsID.JOINCLAN:
-                        int clan_id = packet.ReadInt();
-                        Database.JoinClan(clientID, clan_id);
-                        break;
-                    case RequestsID.LEAVECLAN:
-                        Database.LeaveClan(clientID);
-                        break;
-                    case RequestsID.EDITCLAN:
-                        string clanNameEdit = packet.ReadString();
-                        int minTrophiesEdit = packet.ReadInt();
-                        int minHallEdit = packet.ReadInt();
-                        int patternEdit = packet.ReadInt();
-                        int backgroundEdit = packet.ReadInt();
-                        string patternColorEdit = packet.ReadString();
-                        string backgroundColorEdit = packet.ReadString();
-                        int joinTypeEdit = packet.ReadInt();
-                        Database.EditClan(clientID, clanNameEdit, minTrophiesEdit, minHallEdit, patternEdit, backgroundEdit, patternColorEdit, backgroundColorEdit, joinTypeEdit);
-                        break;
-                    case RequestsID.OPENWAR:
-                        Database.OpenClanWar(clientID);
-                        break;
-                    case RequestsID.STARTWAR:
-                        string warMembersData = packet.ReadString();
-                        Database.StartClanWar(clientID, warMembersData);
-                        break;
-                    case RequestsID.CANCELWAR:
-                        Database.CancelClanWar(clientID);
-                        break;
-                    case RequestsID.WARATTACK:
-                        databaseID = packet.ReadLong();
-                        Database.StartWarAttack(clientID, databaseID);
-                        break;
-                    case RequestsID.WARREPORTLIST:
-                        Database.GetWarReportsList(clientID);
-                        break;
-                    case RequestsID.WARREPORT:
-                        databaseID = packet.ReadLong();
-                        Database.GetWarReport(clientID, databaseID);
-                        break;
-                    case RequestsID.JOINREQUESTS:
-                        Database.GetClanJoinRequests(clientID);
-                        break;
-                    case RequestsID.JOINRESPONSE:
-                        databaseID = packet.ReadLong();
-                        bool accepted = packet.ReadBool();
-                        Database.ClanJoinRequestResponse(clientID, databaseID, accepted);
-                        break;
+                        break;                                                                                                
                     case RequestsID.SENDCHAT:
                         string message = packet.ReadString();
                         int sendType = packet.ReadInt();
@@ -242,37 +147,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     case RequestsID.LOGOUT:
                         device = packet.ReadString();
                         Database.LogOut(clientID, device);
-                        break;
-                    case RequestsID.KICKMEMBER:
-                        databaseID = packet.ReadLong();
-                        Database.KickOutClanMember(clientID, databaseID);
-                        break;
-                    case RequestsID.BREW:
-                        string spellID = packet.ReadString();
-                        Database.BrewSpell(clientID, spellID);
-                        break;
-                    case RequestsID.CANCELBREW:
-                        databaseID = packet.ReadLong();
-                        Database.CancelBrewSpell(clientID, databaseID);
-                        break;
-                    case RequestsID.RESEARCH:
-                        int type = packet.ReadInt();
-                        string global_id = packet.ReadString();
-                        Database.DoResearch(clientID, (Data.ResearchType)type, global_id);
-                        break;
-                    case RequestsID.PROMOTEMEMBER:
-                        databaseID = packet.ReadLong();
-                        Database.PromoteClanMember(clientID, databaseID);
-                        break;
-                    case RequestsID.DEMOTEMEMBER:
-                        databaseID = packet.ReadLong();
-                        Database.DemoteClanMember(clientID, databaseID);
-                        break;
-                    case RequestsID.SCOUT:
-                        databaseID = packet.ReadLong();
-                        int scoutType = packet.ReadInt();
-                        Database.Scout(clientID, databaseID, scoutType);
-                        break;
+                        break;                                    
                     case RequestsID.BUYGEM:
                         int gemPack = packet.ReadInt();
                         string ps = packet.ReadString();
@@ -305,14 +180,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     case RequestsID.BUYRESOURCE:
                         int resPack = packet.ReadInt();
                         Database.BuyResources(clientID, resPack);
-                        break;
-                    case RequestsID.BATTLEREPORTS:
-                        Database.GetBattlesList(clientID);
-                        break;
-                    case RequestsID.BATTLEREPORT:
-                        long repId = packet.ReadLong();
-                        Database.GetBattleReport(clientID, repId);
-                        break;
+                        break;                   
                     case RequestsID.RENAME:
                         string nm = packet.ReadString();
                         Database.ChangePlayerName(clientID, nm);

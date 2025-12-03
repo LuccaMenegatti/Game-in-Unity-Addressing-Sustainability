@@ -604,18 +604,7 @@
                             string demoter = packet.ReadString();
                             MessageBox.Open(1, 0.8f, false, MessageResponded, new string[] { demoter + " demoted your clan rank." }, new string[] { "OK" });
                         }
-                        break;
-                    case RequestsID.SCOUT:
-                        response = packet.ReadInt();
-                        if (response == 1)
-                        {
-                            int scoutType = packet.ReadInt();
-                            bytesLength = packet.ReadInt();
-                            bytes = packet.ReadBytes(bytesLength);
-                            Data.Player scoutTarget = Data.Desrialize<Data.Player>(Data.Decompress(bytes));
-                            UI_Scout.instanse.Open(scoutTarget, (Data.BattleType)scoutType, null);
-                        }
-                        break;
+                        break;                   
                     case RequestsID.BUYGEM:
                         response = packet.ReadInt();
                         if (response == 1)
@@ -767,7 +756,7 @@
             int reqXp = Data.GetNexLevelRequiredXp(data.level);
             UI_Main.instanse._xpBar.fillAmount = (reqXp > 0 ? ((float)data.xp / (float)reqXp) : 0);
 
-            if (UI_Main.instanse.isActive && !UI_Scout.instanse.isActive)
+            if (UI_Main.instanse.isActive)
             {
                 UI_Main.instanse.DataSynced();
                 if (UI_Main.instanse._grid.unidentifiedBuildings != null && UI_Main.instanse._grid.unidentifiedBuildings.Count > 0)

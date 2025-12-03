@@ -219,39 +219,7 @@ namespace DevelopersHub.ClashOfWhatecer
                         Building.selectedInstanse.Deselected();
                     }
                 }
-            }
-            else if (UI_Scout.instanse.isActive)
-            {
-                if (results.Count <= 0)
-                {
-                    bool found = false;
-                    Vector3 planePosition = CameraScreenPositionToWorldPosition(position);
-                    Vector3Int gridPos = UI_Main.instanse._grid.grid.WorldToCell(planePosition);
-                    for (int i = 0; i < UI_Main.instanse._grid.buildings.Count; i++)
-                    {
-                        if (UI_Main.instanse._grid.IsGridPositionIsOnBuilding(new Vector2Int(gridPos.x, gridPos.y), UI_Main.instanse._grid.buildings[i].currentX, UI_Main.instanse._grid.buildings[i].currentY, UI_Main.instanse._grid.buildings[i].rows, UI_Main.instanse._grid.buildings[i].columns))
-                        {
-                            found = true;
-                            UI_Main.instanse._grid.buildings[i].Selected();
-                            break;
-                        }
-                    }
-                    if (!found)
-                    {
-                        if (Building.selectedInstanse != null)
-                        {
-                            Building.selectedInstanse.Deselected();
-                        }
-                    }
-                }
-                else
-                {
-                    if (Building.selectedInstanse != null)
-                    {
-                        Building.selectedInstanse.Deselected();
-                    }
-                }
-            }
+            }           
         }
 
         public bool IsScreenPointOverUI(Vector2 position)
@@ -265,7 +233,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void MoveStarted()
         {
-            if (_zooming == false && (UI_Main.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
+            if (_zooming == false && (UI_Main.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
             {
                 if (_building)
                 {
@@ -319,7 +287,7 @@ namespace DevelopersHub.ClashOfWhatecer
 
         private void ZoomStarted()
         {
-            if ((UI_Main.instanse.isActive || UI_Scout.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
+            if ((UI_Main.instanse.isActive) && UI_Chat.instanse.isActive == false && UI_Settings.instanse.isActive == false && UI_BuildingUpgrade.instanse.isActive == false && UI_Info.instanse.isActive == false)
             {
                 _moveRootBasePosition = _root.position;
                 Vector2 touch0 = inputs.Main.TouchPosition0.ReadValue<Vector2>();

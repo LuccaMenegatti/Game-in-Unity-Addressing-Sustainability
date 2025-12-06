@@ -3339,13 +3339,12 @@ namespace DevelopersHub.RealtimeNetworking.Server
         private static List<Data.CharMessage> GetChatMessages(MySqlConnection connection, long account_id, Data.ChatType type, long lastMessage)
         {
             List<Data.CharMessage> messages = new List<Data.CharMessage>();
-
-            long clan_id = 0;
             long global_id = 0;
-
             string query = "";
-
             string filterTime = "";
+
+            if (type == Data.ChatType.clan) return messages;
+
             if (lastMessage > 0)
             {
                 query = String.Format("SELECT DATE_FORMAT(send_time, '{0}') AS send_time FROM chat_messages WHERE id = {1}", Data.mysqlDateTimeFormat, lastMessage);
@@ -3363,40 +3362,8 @@ namespace DevelopersHub.RealtimeNetworking.Server
                     }
                 }
             }
-
-            if (type == Data.ChatType.clan)
-            {
-                query = String.Format("SELECT clan_id FROM accounts WHERE id = {0} AND clan_id > 0;", account_id);
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                long.TryParse(reader["clan_id"].ToString(), out clan_id);
-                            }
-                        }
-                    }
-                }
-                if (clan_id > 0)
-                {
-                    if (!string.IsNullOrEmpty(filterTime))
-                    {
-                        query = String.Format("SELECT chat_messages.id, chat_messages.account_id, chat_messages.type, chat_messages.global_id, chat_messages.clan_id, chat_messages.message, DATE_FORMAT(chat_messages.send_time, '{0}') AS send_time, accounts.name, accounts.chat_color FROM chat_messages LEFT JOIN accounts ON chat_messages.account_id = accounts.id WHERE chat_messages.clan_id = {1} AND chat_messages.type = {2} AND chat_messages.send_time > '{3}'", Data.mysqlDateTimeFormat, clan_id, (int)type, filterTime);
-                    }
-                    else
-                    {
-                        query = String.Format("SELECT chat_messages.id, chat_messages.account_id, chat_messages.type, chat_messages.global_id, chat_messages.clan_id, chat_messages.message, DATE_FORMAT(chat_messages.send_time, '{0}') AS send_time, accounts.name, accounts.chat_color FROM chat_messages LEFT JOIN accounts ON chat_messages.account_id = accounts.id WHERE chat_messages.clan_id = {1} AND chat_messages.type = {2}", Data.mysqlDateTimeFormat, clan_id, (int)type);
-                    }
-                }
-                else
-                {
-                    query = "";
-                }
-            }
-            else
+         
+            if (type == Data.ChatType.global)
             {
                 if (!string.IsNullOrEmpty(filterTime))
                 {
@@ -3406,10 +3373,7 @@ namespace DevelopersHub.RealtimeNetworking.Server
                 {
                     query = String.Format("SELECT chat_messages.id, chat_messages.account_id, chat_messages.type, chat_messages.global_id, chat_messages.clan_id, chat_messages.message, DATE_FORMAT(chat_messages.send_time, '{0}') AS send_time, accounts.name, accounts.chat_color FROM chat_messages LEFT JOIN accounts ON chat_messages.account_id = accounts.id WHERE chat_messages.global_id = {1} AND chat_messages.type = {2}", Data.mysqlDateTimeFormat, global_id, (int)type);
                 }
-            }
 
-            if (!string.IsNullOrEmpty(query))
-            {
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -3461,15 +3425,17 @@ namespace DevelopersHub.RealtimeNetworking.Server
         private static int _SendChatMessageAsync(long account_id, string message, Data.ChatType type, long target)
         {
             int response = 0;
+            if (type == Data.ChatType.clan) return 2;
+
             if (!string.IsNullOrEmpty(message) && Data.IsMessageGoodToSend(message))
             {
                 using (MySqlConnection connection = GetMysqlConnection())
                 {
-                    long clan_id = 0;
                     int global_chat_blocked = 0;
-                    int clan_chat_blocked = 0;
                     bool timeOk = false;
-                    string query = String.Format("SELECT clan_id, global_chat_blocked, clan_chat_blocked FROM accounts WHERE id = {0} AND last_chat <= NOW() - INTERVAL 1 SECOND;", account_id);
+
+                    string query = String.Format("SELECT global_chat_blocked FROM accounts WHERE id = {0} AND last_chat <= NOW() - INTERVAL 1 SECOND;", account_id);
+
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         using (MySqlDataReader reader = command.ExecuteReader())
@@ -3477,58 +3443,36 @@ namespace DevelopersHub.RealtimeNetworking.Server
                             if (reader.HasRows)
                             {
                                 while (reader.Read())
-                                {
-                                    long.TryParse(reader["clan_id"].ToString(), out clan_id);
+                                {                            
                                     int.TryParse(reader["global_chat_blocked"].ToString(), out global_chat_blocked);
-                                    int.TryParse(reader["clan_chat_blocked"].ToString(), out clan_chat_blocked);
                                     timeOk = true;
                                 }
                             }
                         }
                     }
+
                     if (timeOk)
                     {
-                        if (global_chat_blocked > 0 || (clan_chat_blocked > 0 && clan_id > 0 && type == Data.ChatType.clan))
-                        {
-                            // Banned from sending message
+                        if (global_chat_blocked > 0)
+                        {                          
                             response = 2;
                         }
                         else
                         {
-                            bool sent = false;
                             if (type == Data.ChatType.global)
-                            {
-                                query = String.Format("INSERT INTO chat_messages (account_id, type, global_id, clan_id, message) VALUES({0}, {1}, {2}, {3}, '{4}');", account_id, (int)type, target, clan_id, message);
+                            {                           
+                                query = String.Format("INSERT INTO chat_messages (account_id, type, global_id, clan_id, message) VALUES({0}, {1}, {2}, 0, '{3}');", account_id, (int)type, target, message);
                                 using (MySqlCommand command = new MySqlCommand(query, connection))
                                 {
                                     command.ExecuteNonQuery();
                                 }
+
                                 query = String.Format("DELETE FROM chat_messages WHERE type = {0} AND global_id = {1} AND send_time <= (SELECT send_time FROM (SELECT send_time FROM chat_messages WHERE type = {0} AND global_id = {1} ORDER BY send_time DESC LIMIT 1 OFFSET {2}) messages);", (int)type, target, Data.globalChatArchiveMaxMessages);
                                 using (MySqlCommand command = new MySqlCommand(query, connection))
                                 {
                                     command.ExecuteNonQuery();
                                 }
-                                sent = true;
-                            }
-                            else
-                            {
-                                if (clan_id == target)
-                                {
-                                    query = String.Format("INSERT INTO chat_messages (account_id, type, global_id, clan_id, message) VALUES({0}, {1}, {2}, {3}, '{4}');", account_id, (int)type, 0, clan_id, message);
-                                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                                    {
-                                        command.ExecuteNonQuery();
-                                    }
-                                    query = String.Format("DELETE FROM chat_messages WHERE type = {0} AND clan_id = {1} AND send_time <= (SELECT send_time FROM (SELECT send_time FROM chat_messages WHERE type = {0} AND clan_id = {1} ORDER BY send_time DESC LIMIT 1 OFFSET {2}) messages);", (int)type, clan_id, Data.clanChatArchiveMaxMessages);
-                                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                                    {
-                                        command.ExecuteNonQuery();
-                                    }
-                                    sent = true;
-                                }
-                            }
-                            if (sent)
-                            {
+
                                 query = String.Format("UPDATE accounts SET last_chat = NOW() WHERE id = {0};", account_id);
                                 using (MySqlCommand command = new MySqlCommand(query, connection))
                                 {

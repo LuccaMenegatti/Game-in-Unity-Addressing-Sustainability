@@ -9,28 +9,19 @@
 
     public class UI_Chat : MonoBehaviour
     {
-
         [SerializeField] private bool _globalLock = false;
         [SerializeField] private GameObject _elements = null;
         [SerializeField] private RectTransform _panel = null;
-        // [SerializeField] private Button _buttonOpen = null; in ui main
         [SerializeField] private Button _buttonClose = null;
         [SerializeField] private Button _buttonSend = null;
-        [SerializeField] private Button _buttonClan = null;
-        [SerializeField] private Button _buttonGlobal = null;
         [SerializeField] private TMP_InputField _inputMessage = null;
         [SerializeField] private UI_ChatItem _chatPrefab = null;
-        [SerializeField] private RectTransform _chatGridClan = null;
         [SerializeField] private RectTransform _chatGridGlobal = null;
         [SerializeField] public TextMeshProUGUI _globalLockText = null;
-        //[SerializeField] private GameObject _loadingPrefab = null;
 
         private static UI_Chat _instance = null; public static UI_Chat instanse { get { return _instance; } }
         private bool _active = false; public bool isActive { get { return _active; } }
-
-        private List<UI_ChatItem> clanChats = new List<UI_ChatItem>();
         private List<UI_ChatItem> globalChats = new List<UI_ChatItem>();
-
         private bool updating = false;
         private float timer = 0;
         private Data.ChatType type = Data.ChatType.global;
@@ -38,7 +29,6 @@
         private Vector2 openPosition = Vector2.zero;
         private float transitionDuration = 0.5f;
         private float transitionTimer = 0.5f;
-        // private GameObject loading = null;
         private bool sending = false;
 
         private void Awake()
@@ -58,8 +48,6 @@
             _panel.anchoredPosition = closePosition;
             _buttonSend.onClick.AddListener(Send);
             _buttonClose.onClick.AddListener(Close);
-            _buttonClan.onClick.AddListener(Clan);
-            _buttonGlobal.onClick.AddListener(Global);
         }
 
         private void Update()
@@ -83,27 +71,17 @@
         public void ChatSynced(List<Data.CharMessage> messages, Data.ChatType chatType)
         {
             if (!_active) { return; }
+
+            if (chatType == Data.ChatType.clan) return;
+
             for (int i = 0; i < messages.Count; i++)
             {
-                UI_ChatItem chat = Instantiate(_chatPrefab, messages[i].type == Data.ChatType.clan ? _chatGridClan : _chatGridGlobal);
-                LayoutRebuilder.ForceRebuildLayoutImmediate(messages[i].type == Data.ChatType.clan ? _chatGridClan : _chatGridGlobal);
+                UI_ChatItem chat = Instantiate(_chatPrefab, _chatGridGlobal);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(_chatGridGlobal);
                 chat.Inirialize(messages[i]);
-                if (messages[i].type == Data.ChatType.clan)
-                {
-                    clanChats.Add(chat);
-                }
-                else
-                {
-                    globalChats.Add(chat);
-                }
+                globalChats.Add(chat);
             }
-            if (clanChats.Count > Data.clanChatArchiveMaxMessages)
-            {
-                for (int i = 0; i < clanChats.Count - Data.clanChatArchiveMaxMessages; i++)
-                {
-                    Destroy(clanChats[i].gameObject);
-                }
-            }
+
             if (globalChats.Count > Data.globalChatArchiveMaxMessages)
             {
                 for (int i = 0; i < globalChats.Count - Data.globalChatArchiveMaxMessages; i++)
@@ -111,13 +89,6 @@
                     Destroy(globalChats[i].gameObject);
                 }
             }
-            /*
-            if(!sending && loading != null)
-            {
-                Destroy(loading);
-                loading = null;
-            }
-            */
             updating = false;
         }
 
@@ -134,16 +105,8 @@
                 Packet packet = new Packet();
                 packet.Write((int)Player.RequestsID.SENDCHAT);
                 packet.Write(message);
-                packet.Write((int)type);
+                packet.Write((int)Data.ChatType.global);
                 long target = 0;
-                if (type == Data.ChatType.clan)
-                {
-                    target = Player.instanse.data.clanID;
-                }
-                else
-                {
-                    target = 0;
-                }
                 packet.Write(target);
                 Sender.TCP_Send(packet);
             }
@@ -166,7 +129,8 @@
             sending = false;
             _inputMessage.text = "";
             _inputMessage.interactable = true;
-            if (type == Data.ChatType.global && _globalLock)
+
+            if (_globalLock)
             {
                 _buttonSend.interactable = false;
             }
@@ -176,43 +140,14 @@
             }
         }
 
-        private void Clan()
-        {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
-            type = Data.ChatType.clan;
-            _chatGridGlobal.gameObject.SetActive(false);
-            _chatGridClan.gameObject.SetActive(true);
-            _buttonClan.interactable = false;
-            _buttonGlobal.interactable = true;
-            _globalLockText.gameObject.SetActive(false);
-            _buttonSend.interactable = true;
-            AddLoading();
-            Sync();
-        }
-
         private void Global()
         {
-            SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
             type = Data.ChatType.global;
             _chatGridGlobal.gameObject.SetActive(true);
-            _chatGridClan.gameObject.SetActive(false);
-            _buttonClan.interactable = true;
-            _buttonGlobal.interactable = false;
+
             _globalLockText.gameObject.SetActive(_globalLock);
             _buttonSend.interactable = !_globalLock;
-            AddLoading();
             Sync();
-        }
-
-        private void AddLoading()
-        {/*
-            if(loading != null)
-            {
-                Destroy(loading);
-                loading = null;
-            }
-            loading = Instantiate(_loadingPrefab, type == Data.ChatType.clan ? _chatGridClan : _chatGridGlobal);
-            */
         }
 
         private void Sync()
@@ -221,22 +156,14 @@
             updating = true;
             Packet packet = new Packet();
             packet.Write((int)Player.RequestsID.GETCHATS);
-            packet.Write((int)type);
+            packet.Write((int)Data.ChatType.global);
             long lastMessage = 0;
-            if (type == Data.ChatType.clan)
+
+            if (globalChats.Count > 0)
             {
-                if (clanChats.Count > 0)
-                {
-                    lastMessage = clanChats[clanChats.Count - 1].id;
-                }
+                lastMessage = globalChats[globalChats.Count - 1].id;
             }
-            else
-            {
-                if (globalChats.Count > 0)
-                {
-                    lastMessage = globalChats[globalChats.Count - 1].id;
-                }
-            }
+
             packet.Write(lastMessage);
             Sender.TCP_Send(packet);
         }
@@ -244,21 +171,10 @@
         public void Open()
         {
             sending = false;
-            _chatGridGlobal.gameObject.SetActive(false);
-            _chatGridClan.gameObject.SetActive(false);
-            _buttonClan.interactable = false;
-            _buttonGlobal.interactable = false;
+            _chatGridGlobal.gameObject.SetActive(true);
             _elements.SetActive(true);
-            if (Player.instanse.data.clanID > 0)
-            {
-                _globalLockText.gameObject.SetActive(false);
-                type = Data.ChatType.clan;
-            }
-            else
-            {
-                _globalLockText.gameObject.SetActive(_globalLock);
-                type = Data.ChatType.global;
-            }
+            _globalLockText.gameObject.SetActive(_globalLock);
+            type = Data.ChatType.global;
             StartCoroutine(_Open());
         }
 
@@ -271,18 +187,11 @@
                 _panel.anchoredPosition = Vector2.Lerp(closePosition, openPosition, transitionTimer / transitionDuration);
                 yield return null;
             }
-            if (type == Data.ChatType.clan)
-            {
-                _buttonGlobal.interactable = true;
-                _chatGridClan.gameObject.SetActive(true);
-            }
-            else
-            {
-                _buttonClan.interactable = (Player.instanse.data.clanID > 0);
-                _chatGridGlobal.gameObject.SetActive(true);
-            }
+
+            _chatGridGlobal.gameObject.SetActive(true);
+
             _inputMessage.interactable = true;
-            if (type == Data.ChatType.global && _globalLock)
+            if (_globalLock)
             {
                 _buttonSend.interactable = false;
             }
@@ -306,7 +215,6 @@
             SoundManager.instanse.PlaySound(SoundManager.instanse.buttonClickSound);
             _active = false;
             _chatGridGlobal.gameObject.SetActive(false);
-            _chatGridClan.gameObject.SetActive(false);
             _inputMessage.interactable = false;
             _buttonSend.interactable = false;
             StartCoroutine(_Close());
@@ -355,7 +263,7 @@
 
         public void RefreshList()
         {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(type == Data.ChatType.clan ? _chatGridClan : _chatGridGlobal);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_chatGridGlobal);
         }
 
         private void MessageResponded(int layoutIndex, int buttonIndex)

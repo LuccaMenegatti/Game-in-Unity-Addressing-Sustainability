@@ -1,60 +1,57 @@
-# 🎮 Desenvolvimento de um Jogo em Unity abordando a Sustentabilidade
+# 🏙️ EcoCity: Desenvolvimento de um jogo em Unity abordando a Sustentabilidade.
 
-Este repositório contém o projeto de Desenvolvimento de um Jogo Digital em Unity, abordando a sustentabilidade.
+> *Projeto de TCC desenvolvido no curso de Sistemas de Informação da Fundação Hermínio Ometto (FHO).*
 
-## 📝 Descrição do Projeto
-Este projeto visa utilizar a gamificação como estratégia para fomentar a educação ambiental, estimulando a reflexão crítica sobre questões globais contemporâneas. Por meio de uma experiência imersiva e interativa, o jogo permite que os jogadores enfrentem desafios e tomem decisões relacionadas à sustentabilidade, especificamente alinhados aos Objetivos de Desenvolvimento Sustentável (ODS).
+**EcoCity** é um jogo de estratégia e gerenciamento desenvolvido na engine **Unity**, onde o jogador assume o papel de gestor de uma comunidade em crescimento.
 
-O desenvolvimento do jogo ocorre na engine Unity, explorando seus recursos gráficos e interativos para criar uma narrativa que integra conceitos de sustentabilidade às mecânicas do jogo.
+A missão vai além de construir: é preciso **sobreviver ao tempo mantendo o equilíbrio**. O jogador deve gerenciar o crescimento econômico sem destruir o meio ambiente, enfrentando dilemas reais baseados nos **Objetivos de Desenvolvimento Sustentável (ODS) da ONU**.
 
-## 🎯 Objetivos
-### ✅ Objetivo Geral
-- Desenvolver um jogo digital utilizando a Unity, explorando a gamificação como estratégia para abordar a sustentabilidade.
 
-### ✅ Objetivos Específicos
-- Explorar as capacidades da Unity para o desenvolvimento de jogos digitais.
+## 🎮 Sobre o Jogo
 
-- Definir e implementar as mecânicas de jogo.
+Diferente de simuladores comuns, no EcoCity seus recursos podem ficar negativos. O jogo ensina na prática o conceito de **Trade-off**:
+* 🏭 **Construções:** Gera capital rápido, mas cria passivos ambientais.
+* 🌳 **Vegetação:** Garante pontos sustentáveis, mas custa dinheiro para ser mantida.
 
-- Estudar e aplicar elementos da gamificação.
+O objetivo é chegar ao fim do tempo estipulado com um **saldo positivo duplo**: dinheiro em caixa e o meio ambiente preservado.
 
-- Criar uma interface intuitiva e acessível.
+### 🎯 Foco Educacional (ODS)
+O jogo foi projetado para tangibilizar os seguintes objetivos da ONU:
+* **ODS 2 (Fome Zero e Agricultura Sustentável):** Implementação de hortas comunitárias.
+* **ODS 11 (Cidades e Comunidades Sustentáveis):** Planejamento urbano consciente.
+* **ODS 12 (Consumo e Produção Responsáveis):** Gestão de resíduos e recursos naturais.
 
-- Integrar conceitos de sustentabilidade à narrativa e às mecânicas.
 
-- Estudar e abordar os ODS 2 (Fome Zero), 11 (Cidades Sustentáveis) e 12 (Consumo e Produção Responsáveis).
+## 🛠️ Tecnologias Utilizadas
+Este projeto demonstra competências Fullstack aplicadas ao desenvolvimento de jogos:
 
-## 📚 Metodologia
-A metodologia adotada foi de natureza aplicada, com abordagem qualitativa, de caráter exploratório e descritivo. As etapas incluem:
+* **Engine:** Unity (2D Isometric)
+* **Linguagem:** C# (Scripting de mecânicas e UI)
+* **Backend/Dados:** Integração com **MySQL** para sistema de Login e salvamento de dados.
+* **Design:** GIMP (Texturas) e Audacity (Áudio).
 
-Pesquisa bibliográfica sobre jogos digitais, gamificação e sustentabilidade.
+## 🕹️ Funcionalidades Principais
 
-Estudo e aplicação das mecânicas de gamificação.
+* **Sistema de Economia Dinâmica:** Feedback visual imediato com barras de Capital vs. Sustentabilidade.
+* **Grid Isométrico Interativo:** Construção, remoção e gestão de estruturas (Casas, Usinas, Coletores de Água, etc.).
+* **Multiplayer Social:**
+    * 🏆 **Ranking Global:** Compare seu equilíbrio econômico/ambiental com outros gestores.
+    * 💬 **Chat em Tempo Real:** Troca de estratégias entre jogadores online.
 
-Desenvolvimento iterativo com prototipação no Unity.
+## 📖 Como Jogar
+Para entender detalhadamente as mecânicas, os tipos de construção e como acessar o sistema, consulte o manual completo disponível neste repositório:
 
-Validação através da progressão dos jogadores, análise de métricas como taxa de conclusão e tempo médio por fase.
+📄 **[Clique aqui para ler o Tutorial do Jogo - EcoCity (PDF)](./Tutorial%20do%20Jogo%20-%20EcoCity.pdf)**
 
-## 🕹️ Funcionalidades do Jogo
-Escolhas e Consequências: decisões do jogador impactam diretamente nos ODS.
+## 🎥 Demonstração
 
-Missões e Desafios: baseadas em problemas reais relacionados à sustentabilidade.
-
-Feedback Imediato: retorno instantâneo das ações realizadas, promovendo aprendizado contínuo.
-
-Narrativa Imersiva: integração dos conceitos de sustentabilidade na trama e nas mecânicas.
-
-Interface Acessível: projetada com base nas Heurísticas de Nielsen, garantindo uma boa experiência a jogadores de diferentes perfis.
+[![Assista ao vídeo de demonstração](https://img.youtube.com/vi/aglxDNAvAv8/0.jpg)](https://www.youtube.com/watch?v=aglxDNAvAv8)
 
 ## 👥 Autores
-Bryan Souza da Silva – Aluno de Sistemas de Informação
-📧 bryan.ssilva@alunos.fho.edu.br
 
-Lucca Antonio Menegatti – Aluno de Sistemas de Informação
-📧 lucca.menegatti@alunos.fho.edu.br
+**Bryan Souza da Silva** - bryan.ssilva@alunos.fho.edu.br <br>
+**Lucca Antonio Menegatti** - lucca.menegatti@alunos.fho.edu.br <br>
+**Orientador:** Prof. Me. Diego Henrique Negretto (diegonegretto@fho.edu.br)
 
-Diego Henrique Negretto – Professor Orientador
-📧 diegonegretto@fho.edu.br
-
-## 📌 Palavras-chave
-Unity, Sustentabilidade, Gamificação, Desenvolvimento de Jogos, Educação Ambiental, ODS.
+---
+*Este projeto foi aprovado com sucesso como Trabalho de Conclusão de Curso em Dezembro de 2025.*
